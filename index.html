@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>AIDN - DJ Presskit</title>
+<meta name="description" content="AIDN, Compositeur et DJ basé à Nantes/Vendée. Presskit, sets, disponibilités et contact booking.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800;900&family=Manrope:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style1.css">
+<link rel="stylesheet" href="gallery.css">
+</head>
+
+<body>
+
+<div class="grain"></div>
+
+<!-- Tout le site "normal" est dans #siteWrap : c'est ce bloc qui se floute
+     quand le mur d'images (galerie) s'ouvre par-dessus. -->
+<div id="siteWrap">
+
+<div class="spine"><div class="spine-line"></div></div>
+
+<!-- ============ NAV ============ -->
+<header>
+  <nav class="wrap">
+    <div class="brand">
+      <img src="assets/logo-aidn.jpg" alt="Logo AIDN">
+      <span class="brand-name">AIDN</span>
+    </div>
+    <div class="nav-links">
+      <a href="#bio">Bio</a>
+      <a href="#univers">Univers</a>
+      <a href="#sets">Sets</a>
+      <a href="#booking">Booking</a>
+      <button type="button" id="galleryTrigger" class="nav-link-btn">Galerie</button>
+      <a href="#contact" class="nav-cta">Contact</a>
+    </div>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<div class="mobile-panel" id="mobilePanel">
+  <a href="#bio"><span>01</span>Bio</a>
+  <a href="#univers"><span>02</span>Univers</a>
+  <a href="#sets"><span>03</span>Sets</a>
+  <a href="#booking"><span>04</span>Booking</a>
+  <button type="button" id="galleryTriggerMobile" class="mobile-panel-btn"><span>05</span>Galerie</button>
+  <a href="#contact"><span>06</span>Contact</a>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="helix-stage">
+    <div class="helix" id="helix"></div>
+  </div>
+  <div class="wrap hero-inner">
+    <p class="eyebrow hero-eyebrow">Presskit — 2026</p>
+    <h1>AÏ<span class="accent">DN</span></h1>
+    <p class="hero-tag">DJ basé à Nantes et en Vendée <i>(Côte vendéenne, Nantes & alentours)</i></p>
+    <p class="hero-sub">Un set pensé comme un brin d'ADN : deux lignes qui s'enroulent l'une dans l'autre, la musique et l'émotion, jusqu'à former un son unique.</p>
+    <div class="hero-actions">
+      <a href="#booking" class="btn btn-solid">Me booker</a>
+      <a href="#sets" class="btn btn-ghost">Écouter mes sets</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BIO ============ -->
+<section id="bio">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">01</span>
+      <h2>Bio</h2>
+      <span class="tag">Qui je suis</span>
+    </div>
+    <div class="bio-grid reveal">
+      <div class="bio-portrait">
+        <span class="swipe-hint" id="swipeHint">↕ Swipe</span>
+        <p class="ph-label">
+          <img src="assets/Mousse2.jpg" alt="Portrait AIDN">
+          <img src="assets/Mousse1.jpg" alt="Portrait AIDN">
+          <img src="assets/Mousse3.jpg" alt="Portrait AIDN">
+        </p>
+      </div>
+      <div class="bio-text">
+        <p><strong>AIDN</strong> est un DJ originaire de Vendée,  qui construit son univers autour d'une idée simple : chaque set doit raconter quelque chose, du premier titre jusqu'au dernier.</p>
+        <p>Formé en autodidacte, il travaille ses transitions et son sens du dancefloor à travers des mixes réguliers publiés sur Instagram et TikTok, avant de porter cette énergie sur scène, en bar comme en club.</p>
+        <p>Son nom, <strong>AIDN</strong>, résonne comme l'ADN - une double hélice qui symbolise ce qui l'anime : deux influences qui s'entrelacent, le son et l'émotion, pour former une signature sonore reconnaissable.</p>
+        <div class="stat-row">
+          <div class="stat"><b>2026</b><span>Année de lancement</span></div>
+          <div class="stat"><b>@aidn1dj</b><span>Instagram</span></div>
+          <div class="stat"><b>@dj_aidn</b><span>TikTok</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ UNIVERS ============ -->
+<section id="univers" class="univers">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">02</span>
+      <h2>Univers</h2>
+      <span class="tag">Le son</span>
+    </div>
+    <div class="reveal">
+      <div class="wave" id="wave"></div>
+      <div class="genre-cloud">
+        <span class="genre-pill on">Afro / Amapiano</span>
+        <span class="genre-pill on">Hip-Hop FR / US</span>
+        <span class="genre-pill">RnB</span>
+        <span class="genre-pill">Club Edits</span>
+        <span class="genre-pill">Commercial House</span>
+      </div>
+      <p class="univers-copy">Un style qui s'adapte à la salle sans perdre sa couleur : <strong>lecture de l'ambiance en temps réel</strong>, transitions travaillées, et une sélection pensée pour faire durer la soirée plutôt que brûler les meilleurs titres trop tôt.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SETS ============ -->
+<section id="sets">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">03</span>
+      <h2>Sets & Médias</h2>
+      <span class="tag">À écouter / regarder</span>
+    </div>
+    <div class="media-grid reveal">
+      <div class="media-card">
+        <div>
+          <span class="plat">Instagram</span>
+          <h3>Extraits de mix &amp; transitions</h3>
+          <p>Capsules courtes, format réel — le contenu le plus récent.</p>
+        </div>
+        <a class="go" href="https://www.instagram.com/aidn1dj" target="_blank" rel="noopener">
+          Voir @aidn1dj
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+        </a>
+      </div>
+      <div class="media-card">
+        <div>
+          <span class="plat">TikTok</span>
+          <h3>Formats courts &amp; ambiance</h3>
+          <p>Suivre le travail au quotidien, entre studio et prépa de sets.</p>
+        </div>
+        <a class="go" href="https://www.tiktok.com/@dj_aidn" target="_blank" rel="noopener">
+          Voir @dj_aidn
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+        </a>
+      </div>
+      <div class="media-card">
+        <div>
+          <span class="plat">Bientôt</span>
+          <h3>Set live — captation vidéo</h3>
+          <p>Premier extrait live à venir après une prochaine date.</p>
+        </div>
+        <span class="go" style="opacity:.5;">À venir</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOOKING ============ -->
+<section id="booking">
+  <div class="wrap">
+    <div class="booking">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">04</span>
+          <h2>Booking</h2>
+          <span class="tag">Disponibilités</span>
+        </div>
+        <p class="booking-lede reveal">Disponible pour des dates en <strong>bar et club</strong>, en Vendée, à Nantes & alentours. Une première collaboration se construit simplement.</p>
+        <div class="booking-grid reveal">
+          <div class="booking-card">
+            <span class="num">01</span>
+            <h3>Adapté au lieu</h3>
+            <p>Le set se construit autour de l'ambiance déjà en place, pas à sa place.</p>
+          </div>
+          <div class="booking-card booking-accordion">
+            <span class="num">02</span>
+            <button type="button" class="accordion-toggle" aria-expanded="false" aria-controls="riderPanel">
+              <h3>Rider technique</h3>
+              <span class="chevron">Dérouler <i>›</i></span>
+            </button>
+            <div class="accordion-panel" id="riderPanel">
+              <div class="accordion-inner">
+                <p>Pour un set optimal, il est recommandé de prévoir :</p>
+                <ul>
+                  <li>1 table de mixage (Pioneer DJM ou équivalent)</li>
+                  <li>2 platines (Pioneer CDJ ou équivalent)</li>
+                  <li>1 retour pour le DJ</li>
+                  <li>1 micro pour les annonces</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="booking-card">
+            <span class="num">03</span>
+            <h3>Flexibilité</h3>
+            <p>Possibilité de s'adapter aux besoins spécifiques de differents événements.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">05</span>
+      <h2>Contact</h2>
+      <span class="tag">Réserver une date</span>
+    </div>
+    <div class="contact-grid reveal">
+      <p class="contact-big">Une date à<br>proposer ?<br><a href="mailto:contact@aidn-dj.fr">Écrivez-moi →</a></p>
+      <div class="contact-list">
+        <a href="mailto:contact@aidn-dj.fr">Email <span class="arrow">↗</span></a>
+        <a href="https://www.instagram.com/aidn1dj" target="_blank" rel="noopener">Instagram — @aidn1dj <span class="arrow">↗</span></a>
+        <a href="https://www.tiktok.com/@dj_aidn" target="_blank" rel="noopener">TikTok — @dj_aidn <span class="arrow">↗</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 AIDN</span>
+  <span>Presskit V1 — Vendée, France</span>
+</footer>
+
+</div><!-- /#siteWrap -->
+
+<!-- Tous les scripts sont externes, rien en inline dans le HTML -->
+<script src="script.js" defer></script>
+<script src="gallery.js" defer></script>
+
+</body>
+</html>
