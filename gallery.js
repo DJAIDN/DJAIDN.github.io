@@ -19,7 +19,6 @@ const GALLERY_DATA = [
     items: [
       { src: null, alt: 'Photo de portraits à venir' },
       { src: null, alt: 'Photo de portraits à venir' },
-      { src: null, alt: 'Photo de portraits à venir' },
     ],
   },
   {
@@ -145,7 +144,7 @@ function buildGalleryDOM() {
       } else {
         tile.className = 'gallery-tile empty';
         tile.disabled = true;
-        tile.innerHTML = `<span class="plus">+</span><span class="empty-label">À ajouter</span>`;
+        tile.innerHTML = `<span class="plus">+</span><span class="empty-label">À venir</span>`;
       }
       grid.appendChild(tile);
     });

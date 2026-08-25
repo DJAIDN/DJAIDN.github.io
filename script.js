@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollReveal();
   initSwipeHint();
   initAccordions();
+  initCopyEmail();
 });
 
 /* ---------- Nav mobile (menu plein écran) ---------- */
@@ -129,5 +130,37 @@ function initAccordions() {
         if (chevron) chevron.innerHTML = 'Replier <i>×</i>';
       }
     });
+  });
+}
+
+/* ---------- Copier l'adresse mail (secours si mailto: n'ouvre rien) ---------- */
+function initCopyEmail() {
+  const btn = document.querySelector('.copy-email-btn');
+  if (!btn) return;
+
+  const email = btn.dataset.email;
+  const original = btn.textContent;
+
+  btn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+    } catch (err) {
+      // Fallback pour navigateurs sans API Clipboard
+      const tmp = document.createElement('textarea');
+      tmp.value = email;
+      tmp.style.position = 'fixed';
+      tmp.style.opacity = '0';
+      document.body.appendChild(tmp);
+      tmp.select();
+      document.execCommand('copy');
+      document.body.removeChild(tmp);
+    }
+
+    btn.textContent = 'Adresse copiée ✓';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('copied');
+    }, 2200);
   });
 }

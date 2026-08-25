@@ -1,0 +1,202 @@
+/* =========================================================
+   brand-assets.css — Direction artistique AïDN
+   Palette officielle (charte RMY) + éléments de style inspirés
+   des screens Pinterest (collage Y2K : bords déchirés, halftone,
+   glitch/scanline) recodés en CSS/SVG maison.
+   ========================================================= */
+
+:root{
+  /* Palette exacte extraite de DA_AIDN.pdf */
+  --brand-deep:#47007f;
+  --brand-vivid:#9500ff;
+  --brand-mid:#c766ff;
+  --brand-pink:#ee9fff;
+  --brand-pale:#f3e1ff;
+}
+
+/* ---------- Halftone : texture grunge en surimpression ---------- */
+.halftone-layer{
+  position:absolute; inset:0; pointer-events:none; z-index:1;
+  opacity:.16; mix-blend-mode:screen;
+  background-image:radial-gradient(circle, var(--brand-mid) 1.4px, transparent 1.6px);
+  background-size:14px 14px;
+  -webkit-mask-image:linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
+          mask-image:linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
+}
+
+/* ---------- Star-burst : sticker décoratif ---------- */
+.sticker-star{
+  width:70px; height:70px; color:var(--brand-vivid);
+  filter:drop-shadow(0 0 14px rgba(149,0,255,.55));
+  animation:sticker-spin 22s linear infinite;
+}
+.sticker-star.small{width:34px; height:34px;}
+@keyframes sticker-spin{ to{ transform:rotate(360deg); } }
+
+/* ---------- Badge "splat" (ex: NOUVEAU / DISPO) ---------- */
+.splat-tag{
+  position:relative; display:inline-flex; align-items:center; justify-content:center;
+  width:96px; height:62px; flex-shrink:0;
+}
+.splat-tag svg{position:absolute; inset:0; width:100%; height:100%; color:var(--brand-vivid);}
+.splat-tag span{
+  position:relative; z-index:1; font-family:var(--mono); font-size:.62rem;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink); font-weight:700;
+  transform:rotate(-6deg);
+}
+
+/* ---------- Cadre "die-cut" façon logo (bords irréguliers) ---------- */
+.jagged-frame{
+  clip-path:url(#jaggedFrame);
+  -webkit-clip-path:url(#jaggedFrame);
+}
+
+/* ---------- Glitch / scanline au survol (clin d'oeil VHS-Y2K) ---------- */
+.glitch-hover{position:relative; overflow:hidden;}
+.glitch-hover::before{
+  content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+  background:repeating-linear-gradient(
+    to bottom, rgba(238,159,255,.12) 0px, rgba(238,159,255,.12) 1px,
+    transparent 1px, transparent 3px
+  );
+  opacity:0; transition:opacity .2s ease;
+  mix-blend-mode:screen;
+}
+.glitch-hover:hover::before{opacity:1;}
+.glitch-hover::after{
+  content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+  background:linear-gradient(120deg, transparent 40%, rgba(149,0,255,.25) 50%, transparent 60%);
+  transform:translateX(-120%);
+  transition:transform .5s ease;
+}
+.glitch-hover:hover::after{transform:translateX(120%);}
+
+@media (prefers-reduced-motion: reduce){
+  .sticker-star{animation:none;}
+  .glitch-hover::before, .glitch-hover::after{transition:none; opacity:0; transform:none;}
+}
+
+/* =========================================================
+   Fond "collage" — section Univers
+   ========================================================= */
+.univers{position:relative; overflow:hidden;}
+
+.univers-collage{
+  position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none;
+}
+.halftone-layer.alt{
+  opacity:.1;
+  background-size:20px 20px;
+  transform:rotate(6deg) scale(1.3);
+}
+.collage-deco{position:absolute; filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));}
+
+/* Bords "papier déchiré" qui séparent la section du reste, façon collage */
+.torn-edge{
+  position:absolute; left:0; right:0; height:22px; z-index:2;
+  background:var(--ink);
+}
+.torn-edge.top{
+  top:-1px;
+  clip-path:polygon(
+    0% 100%, 0% 30%, 5% 60%, 10% 20%, 16% 55%, 22% 10%, 28% 50%, 34% 15%,
+    40% 58%, 46% 20%, 52% 50%, 58% 12%, 64% 55%, 70% 18%, 76% 52%, 82% 10%,
+    88% 58%, 94% 22%, 100% 50%, 100% 100%
+  );
+}
+.torn-edge.bottom{
+  bottom:-1px;
+  clip-path:polygon(
+    0% 0%, 0% 70%, 5% 40%, 10% 80%, 16% 45%, 22% 90%, 28% 50%, 34% 85%,
+    40% 42%, 46% 80%, 52% 50%, 58% 88%, 64% 45%, 70% 82%, 76% 48%, 82% 90%,
+    88% 42%, 94% 78%, 100% 50%, 100% 0%
+  );
+}
+
+/* =========================================================
+   Logo hero — interaction au survol
+   Halo de lumière + glitch RVB décalé (VHS) + stickers qui
+   "sautent" hors de la boîte pour attirer l'oeil sur le logo.
+   ========================================================= */
+.logo-interactive{
+  position:relative; display:inline-block; isolation:isolate;
+  padding:24px; -webkit-tap-highlight-color:transparent;
+}
+
+/* Halo lumineux derrière le logo */
+.logo-glow{
+  position:absolute; inset:6%; z-index:-1; border-radius:50%;
+  background:radial-gradient(circle, var(--brand-vivid) 0%, rgba(149,0,255,0) 70%);
+  opacity:0; filter:blur(28px); transform:scale(.8);
+  transition:opacity .45s ease, transform .45s ease;
+}
+
+/* Logo principal : léger scale + rotation au survol */
+.logo-img{
+  position:relative; z-index:2; will-change:transform;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1) ;
+}
+
+/* Doubles fantômes colorés pour l'effet glitch VHS, calés sur le PNG */
+.logo-ghost{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background-image:url('assets/AIDNgraph.png');
+  background-size:contain; background-repeat:no-repeat; background-position:center;
+  opacity:0; mix-blend-mode:screen;
+}
+.logo-ghost.pink{ filter:sepia(1) saturate(6) hue-rotate(260deg) brightness(1.1); }
+.logo-ghost.mid{ filter:sepia(1) saturate(6) hue-rotate(200deg) brightness(1.2); }
+
+/* Stickers qui "sautent" hors du cadre au survol */
+.logo-sticker{
+  position:absolute; z-index:3; pointer-events:none; color:var(--brand-vivid);
+  opacity:0; transform:scale(.25) rotate(0deg);
+  transition:opacity .35s ease, transform .5s cubic-bezier(.34,1.7,.64,1);
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,.4));
+}
+.logo-sticker.star-a{ top:2%; left:0%; width:15%; color:var(--brand-pink); }
+.logo-sticker.star-b{ bottom:4%; right:2%; width:11%; color:var(--brand-mid); }
+.logo-sticker.splat{ top:38%; right:-4%; width:19%; color:var(--brand-vivid); }
+
+/* ---- État survol / focus clavier ---- */
+.logo-interactive:hover .logo-glow,
+.logo-interactive:focus-visible .logo-glow{
+  opacity:.6; transform:scale(1);
+}
+.logo-interactive:hover .logo-img,
+.logo-interactive:focus-visible .logo-img{
+  transform:scale(1.07) rotate(-1.5deg);
+}
+.logo-interactive:hover .logo-ghost,
+.logo-interactive:focus-visible .logo-ghost{
+  opacity:.55;
+  animation:logo-glitch-jitter .28s steps(2, jump-none) infinite alternate;
+}
+.logo-interactive:hover .logo-ghost.mid,
+.logo-interactive:focus-visible .logo-ghost.mid{
+  animation-delay:.06s;
+}
+.logo-interactive:hover .logo-sticker,
+.logo-interactive:focus-visible .logo-sticker{
+  opacity:1; transform:scale(1) rotate(16deg);
+}
+.logo-interactive:hover .logo-sticker.star-b,
+.logo-interactive:focus-visible .logo-sticker.star-b{
+  transform:scale(1) rotate(-20deg);
+}
+.logo-interactive:hover .logo-sticker.splat,
+.logo-interactive:focus-visible .logo-sticker.splat{
+  transform:scale(1) rotate(-8deg);
+}
+
+@keyframes logo-glitch-jitter{
+  0%{ transform:translate(0,0); }
+  50%{ transform:translate(-5px,3px); }
+  100%{ transform:translate(4px,-2px); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .logo-img, .logo-glow, .logo-sticker{transition:none;}
+  .logo-interactive:hover .logo-ghost,
+  .logo-interactive:focus-visible .logo-ghost{animation:none; opacity:.4;}
+}

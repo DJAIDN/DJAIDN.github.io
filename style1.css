@@ -4,7 +4,7 @@
 --surface-2:#1c1a2b;
 --paper:#f3f1f6;
 --muted:#918da3;
---violet:#b24bf3;
+--violet:#9500ff;
 --violet-soft:rgba(178,75,243,.14);
 --amber:#ff6b4a;
 --amber-soft:rgba(255,107,74,.14);
@@ -56,7 +56,6 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 /* ================= NAV ================= */
 header{
 position:fixed; top:0; left:0; right:0; z-index:50;
-height:50px; display:flex; align-items:center; justify-content:stretch;
 background:linear-gradient(to bottom, rgba(10,10,15,.92), rgba(10,10,15,0));
 backdrop-filter:blur(6px);
 border-bottom: 2px solid var(--violet);
@@ -66,7 +65,7 @@ display:flex; align-items:center; justify-content:space-between;
 padding:18px clamp(20px,5vw,64px);
 }
 .brand{display:flex; align-items:center; gap:12px;}
-.brand img{height:34px; width:auto; filter:invert(1);}
+.brand img{height:34px; width:auto;}
 .brand-name{font-family:var(--display); font-weight:800; font-size:1.05rem; letter-spacing:.02em;}
 
 .nav-links{display:flex; gap:clamp(20px,3vw,40px); align-items:center;}
@@ -151,6 +150,11 @@ color:var(--paper); margin-top:22px; max-width:520px;
 }
 .hero-sub{color:var(--muted); margin-top:14px; max-width:480px; font-size:.98rem;}
 .hero-actions{display:flex; flex-wrap:wrap; gap:14px; margin-top:36px;}
+.hero-graphic{display:flex; flex-direction:column; justify-content:center; align-items:center; margin-top:clamp(40px,6vw,80px);
+    padding:0 clamp(20px,5vw,64px) clamp(40px,8vw,80px);
+}
+.hero-graphic img{width:100%; max-width:480px;}
+.hero-graphic p{font-family:var(--mono); font-size:.68rem; color:var(--muted); margin-top:12px; text-align:center;}
 .btn{
 font-family:var(--mono); font-size:.8rem; letter-spacing:.05em; text-transform:uppercase;
 padding:14px 26px; border-radius:999px; display:inline-flex; align-items:center; gap:10px;
@@ -274,11 +278,22 @@ font-family:var(--mono); font-size:.9rem; text-transform:uppercase; letter-spaci
 .contact-list a span.arrow{color:var(--muted); transition:.25s;}
 .contact-list a:hover span.arrow{color:var(--violet); transform:translateX(4px);}
 
+.copy-email-btn{
+  background:none; border:0; cursor:pointer; text-align:left;
+  padding:10px 0 18px; margin-top:-1px;
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.04em; text-transform:uppercase;
+  color:var(--muted); border-bottom:1px solid var(--line); width:100%;
+  transition:color .25s ease;
+}
+.copy-email-btn:hover{color:var(--violet);}
+.copy-email-btn.copied{color:var(--amber);}
+
 footer{
 padding:32px clamp(20px,5vw,64px); display:flex; justify-content:space-between; align-items:center;
 border-top:1px solid var(--line); font-family:var(--mono); font-size:.72rem; color:var(--muted);
 flex-wrap:wrap; gap:12px;
 }
+footer a{color:var(--violet); transition:.25s;}
 
 /* ================= RESPONSIVE ================= */
 @media (max-width:900px){
@@ -333,17 +348,22 @@ pointer-events:none;
 width:100%; background:none; border:0; cursor:pointer; text-align:left; color:var(--paper);
 display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0;
 }
-.booking-accordion h3{font-family:var(--display); font-size:1.15rem; margin:14px 0 0; text-transform:uppercase;}
+.booking-accordion h3{font-family:var(--display); font-size:32px; margin:14px 0 0; text-transform:uppercase;}
 .booking-accordion .chevron{
 font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase;
 color:var(--amber); white-space:nowrap; margin-top:14px;
 }
 .booking-accordion .chevron i{font-style:normal; margin-left:2px;}
-.accordion-panel{max-height:0; overflow:hidden; transition:max-height .4s ease;}
+.accordion-panel{
+    max-height:0; overflow:hidden; transition:max-height .4s ease;
+    display:flex; flex-direction:row; justify-content:space-around; flex-wrap:wrap;
+}
 .accordion-inner{padding-top:14px;}
 .accordion-inner p{color:var(--muted); font-size:.92rem; margin-bottom:10px;}
+.accordion-inner h4{font-family:var(--display); font-size:16px; margin-bottom:10px; text-transform:uppercase;}
 .accordion-inner ul{padding-left:18px; color:var(--muted); font-size:.9rem; display:flex; flex-direction:column; gap:6px;}
-.accordion-inner li{list-style:disc;}
+.accordion-inner li{list-style:square;}
+.accordion-inner i{font-style:normal; color:var(--violet); margin-right:6px;}
 
 /* ---- Transition de flou pour #siteWrap (voir gallery.css) ---- */
 #siteWrap{transition:filter .4s ease;}

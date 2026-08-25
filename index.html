@@ -10,14 +10,65 @@
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800;900&family=Manrope:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style1.css">
 <link rel="stylesheet" href="gallery.css">
+<link rel="stylesheet" href="brand-assets.css">
 </head>
 
 <body>
 
+<!-- Formes réutilisables (direction artistique) — voir assets/stickers.svg
+     pour la planche de référence complète. Inline ici pour une compatibilité
+     clip-path fiable sur tous les navigateurs. -->
+<svg style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
+  <defs>
+    <clipPath id="jaggedFrame" clipPathUnits="objectBoundingBox">
+      <path d="M0.03,0.08 L0.22,0.02 L0.24,0.09 L0.4,0 L0.42,0.07 L0.6,0.01
+               L0.62,0.08 L0.8,0.02 L0.97,0.1 L1,0.25 L0.93,0.4 L1,0.55
+               L0.96,0.72 L1,0.9 L0.85,0.98 L0.68,0.93 L0.5,1 L0.33,0.94
+               L0.16,1 L0.02,0.9 L0.08,0.74 L0,0.58 L0.06,0.42 L0,0.26 Z" />
+    </clipPath>
+    <symbol id="starBurst" viewBox="0 0 200 200">
+      <path fill="currentColor" d="M100 0 L112 68 L170 30 L138 92 L200 100
+               L138 108 L170 170 L112 132 L100 200 L88 132 L30 170 L62 108
+               L0 100 L62 92 L30 30 L88 68 Z"/>
+    </symbol>
+    <symbol id="splatBadge" viewBox="0 0 220 140">
+      <path fill="currentColor" d="M14,52 C6,38 18,20 36,18 C40,4 64,-2 78,8
+               C96,-4 124,-2 134,12 C156,2 184,10 190,30 C210,32 216,58 202,72
+               C214,88 204,112 184,116 C180,130 156,138 140,128
+               C124,140 96,138 84,124 C64,136 36,130 28,112
+               C8,110 0,86 12,70 Z"/>
+    </symbol>
+    <symbol id="tapeStrip" viewBox="0 0 300 80">
+      <path fill="currentColor" fill-opacity="0.85"
+            d="M0,4 L20,2 L60,6 L100,3 L140,5 L180,2 L220,6 L260,3 L280,5 L300,3
+               L300,74 L280,77 L260,73 L220,76 L180,73 L140,77 L100,74 L60,77 L20,73 L0,76 Z"/>
+    </symbol>
+    <symbol id="vinylRing" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="96" fill="none" stroke="currentColor" stroke-width="2" opacity=".9"/>
+      <circle cx="100" cy="100" r="78" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".7"/>
+      <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".55"/>
+      <circle cx="100" cy="100" r="42" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".4"/>
+      <circle cx="100" cy="100" r="10" fill="currentColor"/>
+    </symbol>
+    <symbol id="scribbleArrow" viewBox="0 0 140 70">
+      <path fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+            d="M6,54 C34,10 78,6 110,26"/>
+      <path fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+            d="M86,16 L112,26 L100,50"/>
+    </symbol>
+    <clipPath id="jaggedFrame2" clipPathUnits="objectBoundingBox">
+      <path d="M0.1,0 L0.9,0.02 L1,0.14 L0.96,0.3 L1,0.48 L0.94,0.64
+               L1,0.8 L0.92,0.96 L0.76,0.9 L0.6,1 L0.44,0.92 L0.28,1
+               L0.14,0.9 L0,0.96 L0.04,0.78 L0,0.6 L0.06,0.42 L0,0.24
+               L0.06,0.08 Z" />
+    </clipPath>
+  </defs>
+</svg>
+
 <div class="grain"></div>
 
-<!-- Tout le site "normal" est dans #siteWrap : c'est ce bloc qui se floute
-     quand le mur d'images (galerie) s'ouvre par-dessus. -->
+<!-- Site normal est dans #siteWrap : c'est ce bloc qui se floute
+     quand l'onglet galerie s'ouvre par-dessus. -->
 <div id="siteWrap">
 
 <div class="spine"><div class="spine-line"></div></div>
@@ -26,7 +77,7 @@
 <header>
   <nav class="wrap">
     <div class="brand">
-      <img src="assets/logo-aidn.jpg" alt="Logo AIDN">
+      <img src="assets/AIDNgraph.png" alt="Logo AIDN">
       <span class="brand-name">AIDN</span>
     </div>
     <div class="nav-links">
@@ -54,11 +105,15 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero">
+  <div class="halftone-layer"></div>
   <div class="helix-stage">
     <div class="helix" id="helix"></div>
   </div>
+  <svg class="sticker-star" style="position:absolute; top:82px; left:clamp(20px,5vw,64px);">
+    <use href="#starBurst"></use>
+  </svg>
   <div class="wrap hero-inner">
-    <p class="eyebrow hero-eyebrow">Presskit — 2026</p>
+    <p class="eyebrow hero-eyebrow">Presskit - 2026</p>
     <h1>AÏ<span class="accent">DN</span></h1>
     <p class="hero-tag">DJ basé à Nantes et en Vendée <i>(Côte vendéenne, Nantes & alentours)</i></p>
     <p class="hero-sub">Un set pensé comme un brin d'ADN : deux lignes qui s'enroulent l'une dans l'autre, la musique et l'émotion, jusqu'à former un son unique.</p>
@@ -68,6 +123,20 @@
     </div>
   </div>
 </section>
+
+<div class="hero-graphic">
+  <a href="https://www.instagram.com/aidn1dj/" target="_blank" rel="noopener noreferrer" class="logo-interactive" aria-label="Logo AïDN — design par @RMY, voir son travail sur Instagram">
+    <span class="logo-glow" aria-hidden="true"></span>
+    <img src="assets/AIDNgraph.png" alt="AIDN Graphism Logo" loading="lazy" decoding="async" class="logo-img">
+    <span class="logo-ghost pink" aria-hidden="true"></span>
+    <span class="logo-ghost mid" aria-hidden="true"></span>
+    <svg class="logo-sticker star-a" aria-hidden="true"><use href="#starBurst"></use></svg>
+    <svg class="logo-sticker star-b" aria-hidden="true"><use href="#starBurst"></use></svg>
+    <svg class="logo-sticker splat" aria-hidden="true"><use href="#splatBadge"></use></svg>
+  </a>
+  <p><a href="https://www.instagram.com/rmy_draw/" target="_blank" rel="noopener noreferrer">LOGO réalisé par -> @rmy_draw</a></p>
+</div>
+
 
 <!-- ============ BIO ============ -->
 <section id="bio">
@@ -81,9 +150,9 @@
       <div class="bio-portrait">
         <span class="swipe-hint" id="swipeHint">↕ Swipe</span>
         <p class="ph-label">
-          <img src="assets/Mousse2.jpg" alt="Portrait AIDN">
-          <img src="assets/Mousse1.jpg" alt="Portrait AIDN">
-          <img src="assets/Mousse3.jpg" alt="Portrait AIDN">
+          <img src="assets/Mousse2.jpg" alt="Portrait AIDN" loading="lazy" decoding="async">
+          <img src="assets/Mousse1.jpg" alt="Portrait AIDN" loading="lazy" decoding="async">
+          <img src="assets/Mousse3.jpg" alt="Portrait AIDN" loading="lazy" decoding="async">
         </p>
       </div>
       <div class="bio-text">
@@ -102,24 +171,35 @@
 
 <!-- ============ UNIVERS ============ -->
 <section id="univers" class="univers">
-  <div class="wrap">
+  <div class="torn-edge top"></div>
+  <div class="univers-collage" aria-hidden="true">
+    <div class="halftone-layer alt"></div>
+    <svg class="collage-deco" style="top:10%; left:5%; width:56px; height:56px; transform:rotate(-16deg); color:var(--brand-mid); opacity:.4;"><use href="#starBurst"></use></svg>
+    <svg class="collage-deco" style="top:62%; left:2%; width:110px; height:44px; transform:rotate(-8deg); color:var(--brand-deep); opacity:.9;"><use href="#tapeStrip"></use></svg>
+    <svg class="collage-deco" style="top:6%; right:8%; width:180px; height:180px; transform:rotate(8deg); color:var(--brand-vivid); opacity:.16;"><use href="#vinylRing"></use></svg>
+    <svg class="collage-deco" style="bottom:12%; right:14%; width:48px; height:48px; transform:rotate(24deg); color:var(--brand-pink); opacity:.45;"><use href="#splatBadge"></use></svg>
+    <svg class="collage-deco" style="bottom:30%; left:20%; width:70px; height:36px; transform:rotate(-4deg); color:var(--brand-mid); opacity:.55;"><use href="#scribbleArrow"></use></svg>
+  </div>
+  <div class="wrap" style="position:relative; z-index:2;">
     <div class="section-head">
       <span class="eyebrow">02</span>
       <h2>Univers</h2>
-      <span class="tag">Le son</span>
+      <span class="tag">Mon son</span>
     </div>
     <div class="reveal">
       <div class="wave" id="wave"></div>
       <div class="genre-cloud">
-        <span class="genre-pill on">Afro / Amapiano</span>
         <span class="genre-pill on">Hip-Hop FR / US</span>
-        <span class="genre-pill">RnB</span>
+        <span class="genre-pill on">Afro / Amapiano</span>
+        <span class="genre-pill on">Dancehall / Caribbean</span>
+        <span class="genre-pill on">Reggaeton / Latin</span>
         <span class="genre-pill">Club Edits</span>
-        <span class="genre-pill">Commercial House</span>
+        <span class="genre-pill">House</span>
       </div>
       <p class="univers-copy">Un style qui s'adapte à la salle sans perdre sa couleur : <strong>lecture de l'ambiance en temps réel</strong>, transitions travaillées, et une sélection pensée pour faire durer la soirée plutôt que brûler les meilleurs titres trop tôt.</p>
     </div>
   </div>
+  <div class="torn-edge bottom"></div>
 </section>
 
 <!-- ============ SETS ============ -->
@@ -131,21 +211,21 @@
       <span class="tag">À écouter / regarder</span>
     </div>
     <div class="media-grid reveal">
-      <div class="media-card">
+      <div class="media-card glitch-hover">
         <div>
           <span class="plat">Instagram</span>
-          <h3>Extraits de mix &amp; transitions</h3>
-          <p>Capsules courtes, format réel — le contenu le plus récent.</p>
+          <h3>Extraits de mix &amp; posts</h3>
+          <p>Capsules courtes, format réel, contenu le plus récent.</p>
         </div>
         <a class="go" href="https://www.instagram.com/aidn1dj" target="_blank" rel="noopener">
           Voir @aidn1dj
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
         </a>
       </div>
-      <div class="media-card">
+      <div class="media-card glitch-hover">
         <div>
           <span class="plat">TikTok</span>
-          <h3>Formats courts &amp; ambiance</h3>
+          <h3>Formats courts</h3>
           <p>Suivre le travail au quotidien, entre studio et prépa de sets.</p>
         </div>
         <a class="go" href="https://www.tiktok.com/@dj_aidn" target="_blank" rel="noopener">
@@ -153,13 +233,16 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
         </a>
       </div>
-      <div class="media-card">
+      <div class="media-card glitch-hover">
         <div>
           <span class="plat">Bientôt</span>
-          <h3>Set live — captation vidéo</h3>
-          <p>Premier extrait live à venir après une prochaine date.</p>
+          <h3>Set live</h3>
+          <p>Premier extrait live à venir ??/??/2026.</p>
         </div>
-        <span class="go" style="opacity:.5;">À venir</span>
+        <div class="splat-tag">
+          <svg><use href="#splatBadge"></use></svg>
+          <span>Bientôt</span>
+        </div>
       </div>
     </div>
   </div>
@@ -190,12 +273,22 @@
             </button>
             <div class="accordion-panel" id="riderPanel">
               <div class="accordion-inner">
-                <p>Pour un set optimal, il est recommandé de prévoir :</p>
+                <h4>Pour un set optimal, il est recommandé de prévoir :</h4>
                 <ul>
-                  <li>1 table de mixage (Pioneer DJM ou équivalent)</li>
-                  <li>2 platines (Pioneer CDJ ou équivalent)</li>
-                  <li>1 retour pour le DJ</li>
-                  <li>1 micro pour les annonces</li>
+                  <li>1 table de mixage <i>Pioneer DJM S7 ou équivalent</i></li>
+                  <li>2 platines <i>Pioneer CDJ 2000 ou autres Pioneer</i></li>
+                  <li><i>OU</i> Contrôleur DJ Pioneer <i>si platines non disponibles</i></li>
+                  <li><i>si $possible</i>un retour DJ booth</li>
+                  <li>1 microphone</li>
+                </ul>
+              </div>
+              <div class="accordion-inner">
+                <h4>Materiel personnel :</h4>
+                <ul>
+                  <li>PC Portable</li>
+                  <li>Casque</li>
+                  <li>Stand support ordinateur</li>
+                  <li><i>LOGICIEL</i>Serato DJ Pro</li>
                 </ul>
               </div>
             </div>
@@ -221,11 +314,16 @@
       <span class="tag">Réserver une date</span>
     </div>
     <div class="contact-grid reveal">
-      <p class="contact-big">Une date à<br>proposer ?<br><a href="mailto:contact@aidn-dj.fr">Écrivez-moi →</a></p>
+      <p class="contact-big">Une date à<br>proposer ?<br><a href="mailto:dj.aidn.contact@gmail.com">Écrivez-moi →</a></p>
       <div class="contact-list">
-        <a href="mailto:contact@aidn-dj.fr">Email <span class="arrow">↗</span></a>
-        <a href="https://www.instagram.com/aidn1dj" target="_blank" rel="noopener">Instagram — @aidn1dj <span class="arrow">↗</span></a>
-        <a href="https://www.tiktok.com/@dj_aidn" target="_blank" rel="noopener">TikTok — @dj_aidn <span class="arrow">↗</span></a>
+        <a href="mailto:dj.aidn.contact@gmail.com" class="email-row">
+          Email -> dj.aidn.contact@gmail.com <span class="arrow">↗</span>
+        </a>
+        <button type="button" class="copy-email-btn" data-email="dj.aidn.contact@gmail.com">
+          Copier l'adresse
+        </button>
+        <a href="https://www.instagram.com/aidn1dj" target="_blank" rel="noopener">Instagram -> @aidn1dj <span class="arrow">↗</span></a>
+        <a href="https://www.tiktok.com/@dj_aidn" target="_blank" rel="noopener">TikTok -> @dj_aidn <span class="arrow">↗</span></a>
       </div>
     </div>
   </div>
@@ -233,12 +331,14 @@
 
 <footer>
   <span>© 2026 AIDN</span>
+  <span>Développé par moi même (AIDN)</span>
+  <span>Design & logo par <a href="https://www.instagram.com/rmy_draw/" target="_blank" rel="noopener">@RMY</a></span>
   <span>Presskit V1 — Vendée, France</span>
 </footer>
 
-</div><!-- /#siteWrap -->
+</div>
 
-<!-- Tous les scripts sont externes, rien en inline dans le HTML -->
+<!-- JS externes -->
 <script src="script.js" defer></script>
 <script src="gallery.js" defer></script>
 
