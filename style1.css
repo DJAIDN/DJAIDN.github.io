@@ -180,7 +180,7 @@ animation:cue 2.2s ease-in-out infinite;
 
 /* ================= SECTION SHELL ================= */
 section{position:relative; z-index:3; padding:clamp(80px,12vw,140px) 0;}
-.section-head{display:flex; align-items:baseline; gap:18px; margin-bottom:clamp(40px,6vw,64px); flex-wrap:wrap;}
+.section-head{display:flex; align-items:baseline; gap:18px; margin-bottom:clamp(40px,6vw,0px); flex-wrap:wrap;}
 .section-head h2{
 font-family:var(--display); font-weight:800; font-size:clamp(2.1rem,5vw,3.2rem);
 text-transform:uppercase; letter-spacing:-.01em;
@@ -254,7 +254,7 @@ transition:transform .3s ease, border-color .3s ease;
 /* ---- BOOKING ---- */
 .booking{background:var(--surface-2); border-radius:28px; position:relative; overflow:hidden;}
 .booking .wrap{padding-top:clamp(64px,10vw,110px); padding-bottom:clamp(64px,10vw,110px);}
-.booking-grid{display:grid; grid-template-rows:1fr 1fr 1fr; gap:28px; margin-top:48px;}
+.booking-grid{display:flex; flex-direction: column; gap:28px; margin-top:48px;}
 .booking-card{border-top:1px solid var(--line); padding-top:20px;}
 .booking-card .num{font-family:var(--mono); color:var(--amber); font-size:.8rem;}
 .booking-card h3{font-family:var(--display); font-size:1.15rem; margin:14px 0 10px; text-transform:uppercase;}
@@ -358,6 +358,7 @@ color:var(--amber); white-space:nowrap; margin-top:14px;
 .accordion-panel{
     max-height:0; overflow:hidden; transition:max-height .4s ease;
     display:flex; flex-direction:row; justify-content:space-around; flex-wrap:wrap;
+    padding-top: 16px;
 }
 .accordion-inner{padding-top:14px;}
 .accordion-inner p{color:var(--muted); font-size:.92rem; margin-bottom:10px;}

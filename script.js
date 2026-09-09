@@ -125,7 +125,7 @@ function initAccordions() {
         btn.setAttribute('aria-expanded', 'false');
         if (chevron) chevron.innerHTML = 'Dérouler <i>›</i>';
       } else {
-        panel.style.maxHeight = panel.scrollHeight + 'px';
+        panel.style.maxHeight = 240 + 'px';
         btn.setAttribute('aria-expanded', 'true');
         if (chevron) chevron.innerHTML = 'Replier <i>×</i>';
       }
