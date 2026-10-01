@@ -6,13 +6,12 @@
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initMobileNav();
-  buildHelix();
-  buildWaveform();
-  initScrollReveal();
-  initSwipeHint();
-  initAccordions();
-  initCopyEmail();
+  // Chaque init est isolée : si l'une plante, les autres tournent quand même
+  // (important : initScrollReveal rend les textes .reveal visibles).
+  [initScrollReveal, initMobileNav, buildHelix, buildWaveform,
+    initSwipeHint, initAccordions, initCopyEmail, initStickySectionHeads].forEach(fn => {
+    try { fn(); } catch (err) { console.error('[presskit]', fn.name, err); }
+  });
 });
 
 /* ---------- Nav mobile (menu plein écran) ---------- */
@@ -21,14 +20,19 @@ function initMobileNav() {
   const panel = document.getElementById('mobilePanel');
   if (!burger || !panel) return;
 
+  burger.setAttribute('aria-controls', 'mobilePanel');
+  burger.setAttribute('aria-expanded', 'false');
+
   const closePanel = () => {
     burger.classList.remove('open');
     panel.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
   };
 
   burger.addEventListener('click', () => {
     burger.classList.toggle('open');
     panel.classList.toggle('open');
+    burger.setAttribute('aria-expanded', String(burger.classList.contains('open')));
   });
 
   // Les liens d'ancre ferment le panneau ; le bouton Galerie ouvre la
@@ -90,6 +94,37 @@ function initScrollReveal() {
   targets.forEach(el => io.observe(el));
 }
 
+/* ---------- Styles des titres uniquement pendant leur état sticky ---------- */
+function initStickySectionHeads() {
+  const heads = document.querySelectorAll('.section-head');
+  if (!heads.length) return;
+
+  let ticking = false;
+  const updateStickyHeads = () => {
+    heads.forEach(head => {
+      const section = head.closest('section');
+      if (!section) return;
+
+      const top = Number.parseFloat(getComputedStyle(head).top) || 0;
+      const headRect = head.getBoundingClientRect();
+      const sectionRect = section.getBoundingClientRect();
+      const isStuck = headRect.top <= top && sectionRect.bottom > top + headRect.height;
+      head.classList.toggle('is-stuck', isStuck);
+    });
+    ticking = false;
+  };
+
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(updateStickyHeads);
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  updateStickyHeads();
+}
+
 /* ---------- Hint "Swipe" au-dessus des photos de la Bio ---------- */
 function initSwipeHint() {
   const hint = document.getElementById('swipeHint');
@@ -125,7 +160,7 @@ function initAccordions() {
         btn.setAttribute('aria-expanded', 'false');
         if (chevron) chevron.innerHTML = 'Dérouler <i>›</i>';
       } else {
-        panel.style.maxHeight = 240 + 'px';
+        panel.style.maxHeight = panel.scrollHeight + 'px';
         btn.setAttribute('aria-expanded', 'true');
         if (chevron) chevron.innerHTML = 'Replier <i>×</i>';
       }

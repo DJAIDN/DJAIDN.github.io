@@ -1,0 +1,133 @@
+/* =========================================================
+   texture.css — à charger EN DERNIER (après brand-assets.css)
+   Objectif : casser l'aspect "template IA" (glow, dégradés, pilules
+   toutes identiques) -> collage imprimé : grain, trame, scotch,
+   ombres dures, légères rotations. + correctifs a11y côté CSS.
+   Supprime ce fichier = tu reviens à l'état d'avant.
+   ========================================================= */
+
+/* Le vert n'existe pas dans la charte RMY : on le remplace par le rose */
+:root{ --amber:#ee9fff; }
+
+/* ---------- Grain papier, enfin visible ---------- */
+.grain{ opacity:.12; }
+
+/* ---------- Trame (halftone) en coin de sections ---------- */
+#bio::before, #sets::before, #contact::before{
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.55;
+  background-image:radial-gradient(var(--brand-deep) 1.6px, transparent 1.8px);
+  background-size:16px 16px;
+  -webkit-mask-image:linear-gradient(115deg,#000,transparent 45%);
+          mask-image:linear-gradient(115deg,#000,transparent 45%);
+}
+#sets::before{
+  -webkit-mask-image:linear-gradient(245deg,#000,transparent 45%);
+          mask-image:linear-gradient(245deg,#000,transparent 45%);
+}
+
+/* ---------- Titres : décalage d'impression ---------- */
+.section-head h2{ text-shadow:3px 3px 0 var(--brand-deep); }
+.hero h1{ text-shadow:4px 4px 0 var(--brand-deep), -1px -1px 0 rgba(238,159,255,.35); }
+
+/* ---------- Boutons : plus de pilules, ombre dure ---------- */
+.btn{
+  border-radius:2px; border:2px solid var(--paper);
+  box-shadow:4px 4px 0 var(--brand-deep);
+}
+.btn:hover{ box-shadow:2px 2px 0 var(--brand-deep); transform:translate(2px,2px); }
+.btn-solid{ background:var(--violet); color:var(--paper); }            /* contraste 5:1 */
+.btn-solid:hover{ background:var(--brand-pale); color:var(--ink); }
+.btn-ghost:hover{ color:var(--brand-pink); border-color:var(--brand-pink); }
+.nav-cta{ border-radius:2px !important; }
+.nav-cta:hover{ color:var(--paper) !important; }
+
+/* ---------- Photos Bio : tirage scotché + trame ---------- */
+.bio-portrait{
+  overflow:visible; border-radius:2px; border:0;
+  transform:rotate(-1.5deg); box-shadow:10px 10px 0 var(--brand-deep);
+}
+.bio-portrait .ph-label{ border-radius:2px; }
+.bio-portrait::before{                       /* scotch */
+  content:""; position:absolute; z-index:5; top:-13px; left:50%;
+  width:120px; height:30px; margin-left:-60px; transform:rotate(-4deg);
+  background:rgba(238,159,255,.6);
+  clip-path:polygon(0 0,3% 12%,0 25%,3% 38%,0 50%,3% 62%,0 75%,3% 88%,0 100%,
+                    100% 100%,97% 88%,100% 75%,97% 62%,100% 50%,97% 38%,100% 25%,97% 12%,100% 0);
+}
+.bio-portrait::after{                        /* trame d'impression sur la photo */
+  content:""; position:absolute; inset:0; z-index:3; pointer-events:none; border-radius:2px;
+  background:radial-gradient(rgba(10,10,15,.55) 1px, transparent 1.2px) 0 0/5px 5px;
+  mix-blend-mode:multiply; opacity:.5;
+}
+
+/* ---------- Genres : étiquettes dymo, pas de pilules ---------- */
+.genre-pill{ border-radius:2px; border:2px solid var(--brand-mid); }
+.genre-pill:nth-child(odd){ transform:rotate(-1.2deg); }
+.genre-pill:nth-child(even){ transform:rotate(.9deg); }
+.genre-pill.on{ background:var(--brand-pink); color:var(--ink); border-color:var(--ink); }
+
+/* ---------- Égaliseur : barres franches, sans dégradé violet->vert ---------- */
+.wave i{ background:var(--brand-mid); border-radius:0; opacity:1; }
+.wave i:nth-child(3n){ background:var(--brand-pink); }
+.wave i:nth-child(5n){ background:var(--violet); }
+.rung .bar{ background:linear-gradient(90deg,var(--violet),var(--brand-pink)); }
+
+/* ---------- Cartes Sets : ombre dure + angle ---------- */
+.media-card{
+  --r:0deg; border-radius:3px; border:2px solid var(--brand-mid);
+  box-shadow:7px 7px 0 var(--brand-deep); transform:rotate(var(--r));
+  transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.media-card:nth-child(1){ --r:-.8deg; }
+.media-card:nth-child(2){ --r:.6deg; }
+.media-card:nth-child(3){ --r:-.4deg; }
+.media-card:hover{
+  transform:rotate(0) translate(-3px,-3px);
+  box-shadow:10px 10px 0 var(--violet); border-color:var(--brand-pink);
+}
+
+/* ---------- Booking : papier photocopié ---------- */
+.booking{ border-radius:4px; border:2px solid var(--brand-deep); }
+.booking::before{
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:.35;
+  background:radial-gradient(var(--brand-deep) 1.4px, transparent 1.6px) 0 0/14px 14px;
+  -webkit-mask-image:linear-gradient(200deg,#000,transparent 40%);
+          mask-image:linear-gradient(200deg,#000,transparent 40%);
+}
+.booking .wrap{ position:relative; z-index:1; }
+
+/* ---------- Galerie : polaroïds ---------- */
+.gallery-tile.has-img{
+  border:6px solid var(--paper); border-radius:2px; box-shadow:4px 4px 0 var(--brand-deep);
+}
+.gallery-tile.has-img::after{ border-radius:2px; }
+.gallery-tile.has-img:nth-child(3n+1){ transform:rotate(-1.5deg); }
+.gallery-tile.has-img:nth-child(3n+2){ transform:rotate(1deg); }
+.gallery-tile.empty{ border:2px dashed var(--line); border-radius:2px; }
+
+/* =========================================================
+   Accessibilité (CSS)
+   ========================================================= */
+
+/* Texte violet de petite taille : 3,5:1 -> on passe au violet clair (6,4:1) */
+.eyebrow, .gallery-pack-title, .media-card .plat, footer a,
+.mobile-panel a span, .mobile-panel-btn span, .accordion-inner i{
+  color:var(--brand-mid);
+}
+
+/* Focus clavier visible partout */
+:focus-visible{ outline:3px solid var(--brand-pink); outline-offset:3px; }
+
+/* Menu mobile fermé : ses liens ne doivent plus être atteignables au Tab */
+.mobile-panel:not(.open){
+  visibility:hidden;
+  transition:transform .45s cubic-bezier(.6,0,.2,1), visibility 0s linear .45s;
+}
+
+/* Cibles tactiles >= 44px */
+.nav-link-btn, .burger{ min-height:44px; min-width:44px; }
+
+@media (prefers-reduced-motion: reduce){
+  .reveal{ opacity:1; transform:none; transition:none; }
+  .btn:hover, .media-card:hover{ transform:none; }
+}

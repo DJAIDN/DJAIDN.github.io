@@ -180,7 +180,16 @@ animation:cue 2.2s ease-in-out infinite;
 
 /* ================= SECTION SHELL ================= */
 section{position:relative; z-index:3; padding:clamp(80px,12vw,140px) 0;}
-.section-head{display:flex; align-items:baseline; gap:18px; margin-bottom:clamp(40px,6vw,0px); flex-wrap:wrap;}
+.section-head{
+position:sticky; top:92px; z-index:10;
+display:flex; align-items:baseline; gap:18px; margin-bottom:clamp(40px,6vw,0px); flex-wrap:wrap;
+padding:10px; border-radius:0px; border-bottom:1px solid transparent;
+transition:border-radius .6s ease-in, border-color .3s ease-in, backdrop-filter .6s ease-in;
+}
+.section-head.is-stuck{
+border-bottom-color:var(--line); border-radius:50px;
+backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
 .section-head h2{
 font-family:var(--display); font-weight:800; font-size:clamp(2.1rem,5vw,3.2rem);
 text-transform:uppercase; letter-spacing:-.01em;
@@ -252,7 +261,7 @@ transition:transform .3s ease, border-color .3s ease;
 .media-card:hover .go svg{transform:translate(3px,-3px);}
 
 /* ---- BOOKING ---- */
-.booking{background:var(--surface-2); border-radius:28px; position:relative; overflow:hidden;}
+.booking{background:var(--surface-2); border-radius:28px; position:relative; overflow:clip;}
 .booking .wrap{padding-top:clamp(64px,10vw,110px); padding-bottom:clamp(64px,10vw,110px);}
 .booking-grid{display:flex; flex-direction: column; gap:28px; margin-top:48px;}
 .booking-card{border-top:1px solid var(--line); padding-top:20px;}

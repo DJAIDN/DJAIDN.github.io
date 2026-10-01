@@ -79,7 +79,7 @@
 /* =========================================================
    Fond "collage" — section Univers
    ========================================================= */
-.univers{position:relative; overflow:hidden;}
+.univers{position:relative; overflow:clip;}
 
 .univers-collage{
   position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none;

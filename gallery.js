@@ -27,11 +27,15 @@ const GALLERY_DATA = [
       { src: 'assets/Mousse1.jpg', alt: 'Portrait AIDN 1' },
       { src: 'assets/Mousse2.jpg', alt: 'Portrait AIDN 2' },
       { src: 'assets/Mousse3.jpg', alt: 'Portrait AIDN 3' },
+      { src: 'assets/Austra1.JPG', alt: 'Portrait AIDN 1' },
+      { src: 'assets/Austra2.JPG', alt: 'Portrait AIDN 2' },
+      { src: 'assets/Austra3.JPG', alt: 'Portrait AIDN 3' },
     ],
   },
   {
     title: 'Backstage',
     items: [
+      { src: 'assets/Austra4.PNG', alt: 'Portrait AIDN 1' },
       { src: null, alt: 'Photo backstage à venir' },
       { src: null, alt: 'Photo backstage à venir' },
     ],
@@ -42,6 +46,9 @@ document.addEventListener('DOMContentLoaded', initGallery);
 
 function initGallery() {
   const overlay = buildGalleryDOM();
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Galerie photos');
   document.body.appendChild(overlay);
 
   const siteWrap = document.getElementById('siteWrap');
@@ -53,23 +60,32 @@ function initGallery() {
   const closeBtn = overlay.querySelector('.gallery-close');
   const backdrop = overlay.querySelector('.gallery-backdrop');
 
-  const openGallery = () => {
+  let lastTrigger = null;
+
+  const openGallery = (e) => {
+    lastTrigger = e?.currentTarget || null;
+
     // ferme le menu mobile s'il est ouvert
     document.getElementById('burger')?.classList.remove('open');
+    document.getElementById('burger')?.setAttribute('aria-expanded', 'false');
     document.getElementById('mobilePanel')?.classList.remove('open');
 
     overlay.classList.add('open');
     siteWrap?.classList.add('is-blurred');
+    if (siteWrap) siteWrap.inert = true;          // le site derrière n'est plus atteignable au clavier
     document.body.style.overflow = 'hidden';
     overlay.setAttribute('aria-hidden', 'false');
+    closeBtn.focus();
   };
 
   const closeGallery = () => {
     overlay.classList.remove('open');
     siteWrap?.classList.remove('is-blurred');
+    if (siteWrap) siteWrap.inert = false;         // IMPORTANT : on rend le site à nouveau cliquable
     document.body.style.overflow = '';
     overlay.setAttribute('aria-hidden', 'true');
     closeLightbox(overlay);
+    lastTrigger?.focus();
   };
 
   triggers.forEach(t => t.addEventListener('click', openGallery));
@@ -173,6 +189,7 @@ function buildGalleryDOM() {
 
 /* ---------- Effet "pop" (FLIP) : l'image sort de sa case ---------- */
 function openLightbox(overlay, tile) {
+  
   const lightbox = overlay.querySelector('.gallery-lightbox');
   const lightboxImg = overlay.querySelector('.gallery-lightbox-img');
   const rect = tile.getBoundingClientRect();
@@ -194,8 +211,9 @@ function openLightbox(overlay, tile) {
 
   requestAnimationFrame(() => {
     lightboxImg.style.transition = 'all .45s cubic-bezier(.2,.8,.2,1)';
+    const maxH = window.innerHeight * .82;
     const targetW = Math.min(window.innerWidth * .82, 760);
-    const targetH = targetW * (rect.height / rect.width);
+    const targetH = Math.min(targetW * (rect.height / rect.width), maxH);
     lightboxImg.style.top = '50%';
     lightboxImg.style.left = '50%';
     lightboxImg.style.width = targetW + 'px';
