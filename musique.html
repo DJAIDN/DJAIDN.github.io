@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Musique — AÏDN</title>
+<meta name="description" content="Ce que AÏDN a produit : remix et edits.">
+<link rel="icon" href="assets/AIDNwLogo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800;900&family=Manrope:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <a href="index.html" class="nav-logo"><img src="assets/AIDNwLogo.png" alt="AÏDN, retour en haut"></a>
+  <nav aria-label="Navigation principale">
+    <a href="index.html#bio" class="nav-sec">Bio</a>
+    <a href="index.html#booking" class="nav-sec">Booking</a>
+    <a href="index.html#dates" class="nav-sec">Dates</a>
+    <span class="nav-sep" aria-hidden="true"></span>
+    <a href="index.html#galerie" class="nav-gal">Galerie</a>
+    <a href="musique.html" class="nav-music" aria-current="page"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>Musique</a>
+    <a href="index.html#contact" class="pill">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section class="stub page-top" id="music">
+    <p class="tag">Discographie</p>
+    <h1 class="chrome">Musique</h1>
+    <p>Ce que j'ai produit : remix et edits. Écoute en ligne ; le téléchargement est soumis aux conditions ci-dessous.</p>
+    <ul class="tracks">
+      <li class="track" data-title="Omen (AÏDN Hard Remix)">
+        <button type="button" class="t-play" aria-label="Lire Omen (AÏDN Hard Remix)">▶</button>
+        <div class="t-info"><strong>Omen (AÏDN Hard Remix)</strong><span class="badge">Remix non officiel · original : The Prodigy</span></div>
+        <input class="t-seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Position de lecture">
+        <span class="t-time">0:00</span>
+        <a class="t-dl" href="assets/audio/omen-aidn-hard-remix.mp3" download>↓ MP3</a>
+      </li>
+      <li class="track" data-title="Asalto Bouyon (AÏDN Edit)">
+        <button type="button" class="t-play" aria-label="Lire Asalto Bouyon (AÏDN Edit)">▶</button>
+        <div class="t-info"><strong>Asalto Bouyon (AÏDN Edit)</strong><span class="badge">Edit · usage en set uniquement</span></div>
+        <input class="t-seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Position de lecture">
+        <span class="t-time">0:00</span>
+        <a class="t-dl" href="assets/audio/asalto-bouyon-edit.mp3" download>↓ MP3</a>
+      </li>
+      <li class="track" data-title="XTD, Allo Doudou (Acap Out by AÏDN)">
+        <button type="button" class="t-play" aria-label="Lire Allo Doudou (Acap Out by AÏDN)">▶</button>
+        <div class="t-info"><strong>XTD, Allo Doudou (Acap Out by AÏDN)</strong><span class="badge">Edit · usage en set uniquement</span></div>
+        <input class="t-seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Position de lecture">
+        <span class="t-time">0:00</span>
+        <a class="t-dl" href="assets/audio/allo-doudou-acap-out.mp3" download>↓ MP3</a>
+      </li>
+    </ul>
+    <aside class="legal">
+      <strong>À lire avant de télécharger.</strong> Ces titres sont des remix et edits non officiels, faits à partir d'œuvres dont je ne détiens aucun droit. Ils sont partagés gratuitement, <b>uniquement pour être joués en set</b> : ni revente, ni republication (SoundCloud, YouTube, TikTok, etc.), ni usage commercial. Les droits de chaque œuvre originale restent à leurs ayants droit. Retrait immédiat sur simple demande : dj.aidn.contact@gmail.com.
+    </aside>
+    <dialog id="dlDialog">
+      <form method="dialog">
+        <h3>Conditions de téléchargement</h3>
+        <p>Edit ou remix non officiel : je n'en détiens pas les droits. Usage en set uniquement, sans publication ni revente.</p>
+        <label><input type="checkbox" id="dlOk"> J'accepte ces conditions</label>
+        <div class="dlg-actions"><button value="cancel">Annuler</button><button id="dlGo" value="ok" disabled>Télécharger</button></div>
+      </form>
+    </dialog>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 AÏDN</span>
+  <span>Logo &amp; DA : <a href="https://www.instagram.com/rmy_draw/" target="_blank" rel="noopener">@rmy_draw</a></span>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>

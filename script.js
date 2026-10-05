@@ -1,201 +1,173 @@
 /* =========================================================
-   script.js — comportements principaux du presskit AïDN
-   (nav mobile, hélice 3D, waveform, reveal, swipe hint,
-   accordéon "Rider technique")
-   La galerie / mur d'images est gérée séparément dans gallery.js
+   script.js — AÏDN · homepage (JS vanilla, aucune dépendance)
    ========================================================= */
 
+// Signale au CSS que le JS tourne (sinon les .reveal restent visibles)
+document.documentElement.classList.add('js');
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Chaque init est isolée : si l'une plante, les autres tournent quand même
-  // (important : initScrollReveal rend les textes .reveal visibles).
-  [initScrollReveal, initMobileNav, buildHelix, buildWaveform,
-    initSwipeHint, initAccordions, initCopyEmail, initStickySectionHeads].forEach(fn => {
-    try { fn(); } catch (err) { console.error('[presskit]', fn.name, err); }
-  });
+  initLoader();
+  initMarquee();
+  initNavScroll();
+  initReveal();
+  initPauseOffscreen();
+  initPlayer();
+  initDownloadGate();
 });
 
-/* ---------- Nav mobile (menu plein écran) ---------- */
-function initMobileNav() {
-  const burger = document.getElementById('burger');
-  const panel = document.getElementById('mobilePanel');
-  if (!burger || !panel) return;
-
-  burger.setAttribute('aria-controls', 'mobilePanel');
-  burger.setAttribute('aria-expanded', 'false');
-
-  const closePanel = () => {
-    burger.classList.remove('open');
-    panel.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
-  };
-
-  burger.addEventListener('click', () => {
-    burger.classList.toggle('open');
-    panel.classList.toggle('open');
-    burger.setAttribute('aria-expanded', String(burger.classList.contains('open')));
-  });
-
-  // Les liens d'ancre ferment le panneau ; le bouton Galerie ouvre la
-  // galerie à la place (voir gallery.js), donc on ne le ferme pas ici.
-  panel.querySelectorAll('a').forEach(a => a.addEventListener('click', closePanel));
+/* Bandeau : on duplique le contenu pour une boucle sans coupure
+   (le CSS décale la piste de -50%) */
+function initMarquee() {
+  const track = document.getElementById('track');
+  if (track) track.innerHTML += track.innerHTML;
 }
 
-/* ---------- Hélice ADN en 3D (CSS transforms) ---------- */
-function buildHelix() {
-  const helix = document.getElementById('helix');
-  if (!helix) return;
-
-  const RUNGS = 14;
-  const frag = document.createDocumentFragment();
-
-  for (let i = 0; i < RUNGS; i++) {
-    const rung = document.createElement('div');
-    rung.className = 'rung';
-    const angle = (360 / RUNGS) * i;
-    const y = (i / (RUNGS - 1)) * 100 - 50; // -50% à 50%
-    rung.style.transform = `translate(-50%, ${y * 4}px) rotateY(${angle}deg)`;
-    rung.innerHTML = `<span class="node a"></span><span class="bar"></span><span class="node b"></span>`;
-    frag.appendChild(rung);
-  }
-  helix.appendChild(frag);
-}
-
-/* ---------- Barres d'égaliseur animées (section Univers) ---------- */
-function buildWaveform() {
-  const wave = document.getElementById('wave');
-  if (!wave) return;
-
-  const BARS = 48;
-  const frag = document.createDocumentFragment();
-
-  for (let i = 0; i < BARS; i++) {
-    const bar = document.createElement('i');
-    bar.style.animationDelay = (Math.random() * 1.6).toFixed(2) + 's';
-    bar.style.animationDuration = (1.1 + Math.random() * 1.1).toFixed(2) + 's';
-    frag.appendChild(bar);
-  }
-  wave.appendChild(frag);
-}
-
-/* ---------- Apparition au scroll ---------- */
-function initScrollReveal() {
-  const targets = document.querySelectorAll('.reveal');
-  if (!targets.length) return;
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: .15 });
-
-  targets.forEach(el => io.observe(el));
-}
-
-/* ---------- Styles des titres uniquement pendant leur état sticky ---------- */
-function initStickySectionHeads() {
-  const heads = document.querySelectorAll('.section-head');
-  if (!heads.length) return;
-
+/* Nav : se compacte + progression du scroll (1 mise à jour max par image) */
+function initNavScroll() {
+  const nav = document.getElementById('nav');
+  if (!nav) return;
   let ticking = false;
-  const updateStickyHeads = () => {
-    heads.forEach(head => {
-      const section = head.closest('section');
-      if (!section) return;
-
-      const top = Number.parseFloat(getComputedStyle(head).top) || 0;
-      const headRect = head.getBoundingClientRect();
-      const sectionRect = section.getBoundingClientRect();
-      const isStuck = headRect.top <= top && sectionRect.bottom > top + headRect.height;
-      head.classList.toggle('is-stuck', isStuck);
-    });
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+    nav.style.setProperty('--p', max > 0 ? (window.scrollY / max).toFixed(3) : 0);
     ticking = false;
   };
-
-  const onScroll = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(updateStickyHeads);
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
-  updateStickyHeads();
-}
-
-/* ---------- Hint "Swipe" au-dessus des photos de la Bio ---------- */
-function initSwipeHint() {
-  const hint = document.getElementById('swipeHint');
-  const scroller = document.querySelector('.bio-portrait .ph-label');
-  if (!hint || !scroller) return;
-
-  let hidden = false;
-  scroller.addEventListener('scroll', () => {
-    if (hidden) return;
-    hidden = true;
-    hint.classList.add('is-hidden');
+  update();
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
   }, { passive: true });
 }
 
-/* ---------- Accordéon "Rider technique" (façon "DÉROULER ›" de SWOAK) ---------- */
-function initAccordions() {
-  const toggles = document.querySelectorAll('.accordion-toggle');
-
-  toggles.forEach(btn => {
-    const panelId = btn.getAttribute('aria-controls');
-    const panel = document.getElementById(panelId);
-    const chevron = btn.querySelector('.chevron');
-    if (!panel) return;
-
-    // état initial fermé
-    panel.style.maxHeight = null;
-
-    btn.addEventListener('click', () => {
-      const isOpen = btn.getAttribute('aria-expanded') === 'true';
-
-      if (isOpen) {
-        panel.style.maxHeight = null;
-        btn.setAttribute('aria-expanded', 'false');
-        if (chevron) chevron.innerHTML = 'Dérouler <i>›</i>';
-      } else {
-        panel.style.maxHeight = panel.scrollHeight + 'px';
-        btn.setAttribute('aria-expanded', 'true');
-        if (chevron) chevron.innerHTML = 'Replier <i>×</i>';
-      }
+/* Apparition douce des sections au scroll */
+function initReveal() {
+  const items = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in');
+      io.unobserve(e.target);
     });
+  }, { threshold: .15 });
+  items.forEach(el => {
+    [...el.children].forEach((c, i) => c.style.setProperty('--i', i));
+    io.observe(el);
   });
 }
 
-/* ---------- Copier l'adresse mail (secours si mailto: n'ouvre rien) ---------- */
-function initCopyEmail() {
-  const btn = document.querySelector('.copy-email-btn');
-  if (!btn) return;
+/* Lecteur audio : un seul <audio> partagé, un seul titre joué à la fois */
+function initPlayer() {
+  if (!document.querySelector('.track')) return; // page sans lecteur
+  const audio = new Audio();
+  audio.preload = 'metadata';
+  let current = null;
+  const fmt = s => isFinite(s) ? Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0') : '0:00';
 
-  const email = btn.dataset.email;
-  const original = btn.textContent;
+  document.querySelectorAll('.track').forEach(track => {
+    const btn = track.querySelector('.t-play');
+    const seek = track.querySelector('.t-seek');
+    const time = track.querySelector('.t-time');
+    const src = track.querySelector('.t-dl').getAttribute('href');
 
-  btn.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(email);
-    } catch (err) {
-      // Fallback pour navigateurs sans API Clipboard
-      const tmp = document.createElement('textarea');
-      tmp.value = email;
-      tmp.style.position = 'fixed';
-      tmp.style.opacity = '0';
-      document.body.appendChild(tmp);
-      tmp.select();
-      document.execCommand('copy');
-      document.body.removeChild(tmp);
-    }
-
-    btn.textContent = 'Adresse copiée ✓';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = original;
-      btn.classList.remove('copied');
-    }, 2200);
+    btn.addEventListener('click', () => {
+      if (current === track) { audio.paused ? audio.play() : audio.pause(); return; }
+      if (current) reset(current);
+      current = track;
+      audio.src = src;
+      audio.play();
+    });
+    seek.addEventListener('input', () => {
+      if (current === track && audio.duration) audio.currentTime = audio.duration * seek.value / 100;
+    });
   });
+
+  function reset(t) {
+    t.classList.remove('playing');
+    t.querySelector('.t-play').textContent = '▶';
+    t.querySelector('.t-seek').value = 0;
+    t.querySelector('.t-time').textContent = '0:00';
+  }
+  const ui = () => current && (
+    current.classList.toggle('playing', !audio.paused),
+    current.querySelector('.t-play').textContent = audio.paused ? '▶' : '❚❚'
+  );
+  audio.addEventListener('play', ui);
+  audio.addEventListener('pause', ui);
+  audio.addEventListener('ended', () => current && reset(current));
+  audio.addEventListener('timeupdate', () => {
+    if (!current || !audio.duration) return;
+    current.querySelector('.t-seek').value = audio.currentTime / audio.duration * 100;
+    current.querySelector('.t-time').textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+  });
+}
+
+/* Téléchargement : confirmation « DJ uniquement » avant de lancer le fichier */
+function initDownloadGate() {
+  const dlg = document.getElementById('dlDialog');
+  const ok = document.getElementById('dlOk');
+  const go = document.getElementById('dlGo');
+  if (!dlg || typeof dlg.showModal !== 'function') return; // sans <dialog>, le lien reste direct
+  let pending = null;
+
+  document.querySelectorAll('.t-dl').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    pending = a;
+    ok.checked = false;
+    go.disabled = true;
+    dlg.showModal();
+  }));
+  ok.addEventListener('change', () => { go.disabled = !ok.checked; });
+  go.addEventListener('click', () => {
+    if (!pending) return;
+    const l = document.createElement('a');
+    l.href = pending.href; l.download = '';
+    l.click();
+  });
+}
+
+/* Pause des animations infinies quand l'élément n'est pas à l'écran */
+function initPauseOffscreen() {
+  const els = document.querySelectorAll('.marquee, .bio-star');
+  if (!els.length) return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => e.target.classList.toggle('is-paused', !e.isIntersecting));
+  });
+  els.forEach(el => io.observe(el));
+}
+
+/* Loader : affiché une seule fois par session (l'état « loading » est posé
+   dans le <head> avant le premier rendu). Dure au moins ~1,6 s, reste à 90 %
+   tant que la page n'est pas totalement chargée, coupe à 5 s max.
+   Sortie animée (~1,2 s) : le hero démarre pendant que le rideau monte. */
+function initLoader() {
+  const el = document.getElementById('loader');
+  const root = document.documentElement;
+  if (!el) { root.classList.add('ready'); return; }
+  if (!root.classList.contains('loading')) {
+    el.remove();
+    root.classList.add('ready');
+    return;
+  }
+
+  const bar = el.querySelector('.ld-bar i');
+  const pct = el.querySelector('.ld-pct');
+  const MIN = 1600, start = performance.now();
+  let loaded = document.readyState === 'complete';
+  window.addEventListener('load', () => { loaded = true; });
+
+  (function tick(now) {
+    const t = Math.min((now - start) / MIN, 1);
+    const p = loaded ? t : Math.min(t, .9);
+    bar.style.transform = `scaleX(${p})`;
+    pct.textContent = Math.round(p * 100) + '%';
+    if (p < 1 && now - start < 5000) return requestAnimationFrame(tick);
+
+    el.classList.add('out');                           // lance l'animation de sortie
+    setTimeout(() => root.classList.add('ready'), 650); // le hero entre pendant la montée du rideau
+    setTimeout(() => {                                  // fin : on nettoie et on libère le scroll
+      root.classList.remove('loading');
+      el.remove();
+    }, 1250);
+    try { sessionStorage.setItem('aidn-seen', '1'); } catch (e) {}
+  })(start);
 }
