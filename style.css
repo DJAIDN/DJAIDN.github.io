@@ -80,7 +80,7 @@ a{color:inherit;text-decoration:none}
 /* ---------- 5. Bandeau « papier » aux bords déchirés + défilement ---------- */
 .marquee{position:relative;background:var(--pale);color:var(--deep);padding:20px 0;overflow:hidden;margin:20px 0}
 .marquee::before,.marquee::after{content:"";position:absolute;left:0;right:0;height:18px;background:var(--ink)}
-.marquee::before{top:0;clip-path:polygon(0 0,100% 0,100% 40%,94% 70%,88% 25%,82% 80%,76% 35%,70% 75%,64% 20%,58% 70%,52% 30%,46% 80%,40% 25%,34% 72%,28% 30%,22% 78%,16% 22%,10% 70%,5% 35%,0 60%)}
+.marquee::before{top: -1px;clip-path:polygon(0 0,100% 0,100% 40%,94% 70%,88% 25%,82% 80%,76% 35%,70% 75%,64% 20%,58% 70%,52% 30%,46% 80%,40% 25%,34% 72%,28% 30%,22% 78%,16% 22%,10% 70%,5% 35%,0 60%)}
 .marquee::after{bottom:0;clip-path:polygon(0 100%,100% 100%,100% 60%,95% 30%,89% 75%,83% 25%,77% 70%,71% 30%,65% 80%,59% 28%,53% 72%,47% 22%,41% 75%,35% 30%,29% 80%,23% 25%,17% 72%,11% 30%,5% 78%,0 40%)}
 .marquee-track{display:flex;width:max-content;animation:scroll 30s linear infinite}
 .marquee-track span{font:900 clamp(1.4rem,4vw,2.4rem) var(--display);text-transform:uppercase;padding:0 .8em;white-space:nowrap}
