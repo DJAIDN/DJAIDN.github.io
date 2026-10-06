@@ -173,19 +173,38 @@ function initLoader() {
   })(start);
 }
 
-/* Dates : lues depuis dates.json (modifiable sans toucher au code).
-   "22:00 - 04:00" -> libellé "22:00 – 04:00" + durée "6 h de set" (gère le passage de minuit). */
-function parseHours(str) {
-  const m = /(\d{1,2})[:h](\d{2})\s*[-–—]\s*(\d{1,2})[:h](\d{2})/.exec(str || '');
-  if (!m) return { label: str || '', length: '' };
+/* Dates : lues depuis dates.json (modifiable sans toucher au code). */
+/* Horaires d'une date. Format écrit par AIDN Studio : time = "22:00" (heure de début)
+   et duration = 360 (durée du set en MINUTES). L'ancien format duration = "22:00 - 04:00"
+   reste accepté, et chaque champ est optionnel (une date sans horaires s'affiche quand même). */
+function getHours(x) {
   const pad = n => String(n).padStart(2, '0');
-  let diff = (+m[3] * 60 + +m[4]) - (+m[1] * 60 + +m[2]);
-  if (diff <= 0) diff += 24 * 60;
-  const h = Math.floor(diff / 60), min = diff % 60;
-  return {
-    label: `${pad(m[1])}:${m[2]} – ${pad(m[3])}:${m[4]}`,
-    length: `${h} h${min ? ' ' + pad(min) : ''} de set`
-  };
+  const fmtLen = min => min < 60
+    ? `${min} min de set`
+    : `${Math.floor(min / 60)} h${min % 60 ? ' ' + pad(min % 60) : ''} de set`;
+
+  // ancien format "22:00 - 04:00" dans duration
+  const range = typeof x.duration === 'string'
+    ? /(\d{1,2})[:h](\d{2})\s*[-–—]\s*(\d{1,2})[:h](\d{2})/.exec(x.duration)
+    : null;
+  if (range) {
+    let d = (+range[3] * 60 + +range[4]) - (+range[1] * 60 + +range[2]);
+    if (d <= 0) d += 24 * 60;
+    return { label: `${pad(range[1])}:${range[2]} – ${pad(range[3])}:${range[4]}`, length: fmtLen(d) };
+  }
+
+  const hm = /^(\d{1,2})[:h](\d{2})$/.exec(String(x.time || '').trim());
+  const start = hm ? +hm[1] * 60 + +hm[2] : null;
+  const dur = Number(x.duration);
+  const hasDur = x.duration !== undefined && x.duration !== null && x.duration !== '' && Number.isFinite(dur) && dur > 0;
+
+  if (start !== null && hasDur) {              // début + durée -> heure de fin calculée (passe minuit)
+    const end = (start + dur) % (24 * 60);
+    return { label: `${pad(hm[1])}:${hm[2]} – ${pad(Math.floor(end / 60))}:${pad(end % 60)}`, length: fmtLen(dur) };
+  }
+  if (start !== null) return { label: `${pad(hm[1])}:${hm[2]}`, length: 'Début du set' };
+  if (hasDur) return { label: '', length: fmtLen(dur) };
+  return { label: '', length: '' };
 }
 
 async function initDates() {
@@ -209,11 +228,11 @@ async function initDates() {
     const today = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
     const upcoming = (data.dates || [])
       .filter(x => x.date >= today && x.status !== 'cancelled')
-      .sort((a, b) => a.date.localeCompare(b.date));
+      .sort((a, b) => a.date.localeCompare(b.date) || String(a.time || '').localeCompare(String(b.time || '')));
 
     upcoming.forEach((x, i) => {
       const d = new Date(x.date + 'T12:00');
-      const hours = parseHours(x.duration);
+      const hours = getHours(x);
 
       // gauche : date + lieu
       const time = el('time');
