@@ -1,22 +1,12 @@
 /* =========================================================
-   style.css — AÏDN · Direction 1 « Y2K Grunge & Modern Clubbing »
+   style.css — AIDN · Direction 1 « Y2K Grunge & Modern Clubbing »
    1. Variables  2. Base  3. Nav  4. Hero  5. Bandeau papier
    6. Sections  7. Responsive / accessibilité
    ========================================================= */
 
-@font-face {
-  font-family: 'Spray Tag';
-  src: url('assets/fonts/GrimeSlime-Regular.woff2') format('woff2'); /* Ajuste le nom exact de ton fichier */
-  font-weight:900;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Coolvetica Condensed';
-  src: url('assets/fonts/Coolvetica-Rg.woff2') format('woff2'); /* Ajuste le nom exact de ton fichier */
-  font-weight: normal;
-  font-style: normal;
-}
+@font-face{font-family:'Archivo Expanded';src:url('assets/fonts/Archivo-Expanded-Black.woff2') format('woff2');font-weight:900;font-style:normal;font-display:swap}
+@font-face{font-family:'Coolvetica Condensed';src:url('assets/fonts/Coolvetica-Rg-Cond.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Grime Slime';src:url('assets/fonts/GrimeSlime-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
 
 /* ---------- 1. Variables : palette de la charte + effet chrome ---------- */
 :root {
@@ -29,10 +19,12 @@
   --pale: #f3e1ff;
   --chrome: linear-gradient(120deg,#fff 0%,#c9c4d6 30%,#7d768f 52%,#f3e1ff 74%,#fff 100%);
   
-  /* Nouvelles polices */
-  --display: 'Archivo', sans-serif;
-  --body: 'Coolvetica Condensed', sans-serif;
-  --mono: 'Spray Tag', sans-serif;
+  /* Polices : titres / sous-titres / accents / texte / labels */
+  --display: 'Archivo Expanded', 'Arial Black', sans-serif;
+  --cond: 'Coolvetica Condensed', 'Arial Narrow', sans-serif;
+  --tag: 'Grime Slime', cursive;
+  --body: 'Manrope', sans-serif;
+  --mono: 'Space Mono', monospace;
   
   --pad: clamp(20px,5vw,64px);
 }
@@ -47,11 +39,6 @@ a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px solid var(--pink);outline-offset:3px}
 ::selection{background:var(--vivid);color:#fff}
 
-/* Application de la largeur 125 (stretch) et du poids 900 pour tous les éléments en Display (Archivo) */
-h1, h2, h3, .marquee-track span, .door strong, .dates b, .dates strong, .t-info strong, dialog h3, .contact-big, .brand-name {
-    font-stretch: 125%;
-    font-weight: 900;
-}
 
 /* Grain : la texture qui casse le côté « lisse » */
 .grain{
@@ -103,7 +90,7 @@ h1, h2, h3, .marquee-track span, .door strong, .dates b, .dates strong, .t-info 
   transition:transform .25s ease,box-shadow .25s ease,background .25s ease;
 }
 .door .k{font:700 .7rem var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--pink)}
-.door strong{font:800 1.05rem/1.25 var(--display)}
+.door strong{font:400 1.7rem/1.05 var(--cond)}
 .door em{font:400 .76rem var(--mono);font-style:normal;color:#b9aecb}
 .door:hover{transform:translateY(-4px) rotate(-.6deg);box-shadow:0 0 34px rgba(149,0,255,.6);background:var(--deep)}
 .door-fan{border-color:var(--vivid)}
@@ -154,7 +141,7 @@ footer a{color:var(--mid)}
 /* ---------- 9. Booking, dates, contact ---------- */
 .rider,.tracks,.dates,.socials,.legal{width:100%}
 .rider{border:1px solid rgba(238,159,255,.3);border-radius:4px;padding:18px 22px}
-.rider summary{font:800 1.1rem var(--display);text-transform:uppercase;cursor:pointer}
+.rider summary{font:400 1.8rem var(--cond);text-transform:uppercase;cursor:pointer}
 .rider-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:16px}
 .rider h3{font:700 .72rem var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--pink);margin-bottom:8px}
 .rider li{margin-left:1.1em;list-style:square;color:#b9aecb}
@@ -163,7 +150,7 @@ footer a{color:var(--mid)}
 .dates time{display:flex;flex-direction:column;align-items:center;min-width:64px;font:400 .66rem var(--mono);text-transform:uppercase;color:var(--mid)}
 .dates time b{font:900 2rem/1 var(--display);color:var(--pale)}
 .dates div{flex:1;display:flex;flex-direction:column}
-.dates strong{font:800 1.15rem var(--display)}
+.dates strong{font:400 1.7rem/1.1 var(--cond)}
 .dates span{color:#b9aecb}
 .badge{font:700 .66rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--pink);border:1px solid rgba(238,159,255,.4);padding:3px 8px;align-self:flex-start}
 .socials a{justify-content:space-between;font:700 .9rem var(--mono);text-transform:uppercase}
@@ -175,7 +162,7 @@ footer a{color:var(--mid)}
 .t-play{grid-area:p;width:48px;height:48px;border-radius:50%;border:1px solid var(--vivid);background:var(--deep);color:#fff;cursor:pointer;transition:box-shadow .2s}
 .t-play:hover,.track.playing .t-play{box-shadow:0 0 22px rgba(149,0,255,.7);background:var(--vivid)}
 .t-info{grid-area:i;display:flex;flex-direction:column;gap:6px}
-.t-info strong{font:800 1rem/1.25 var(--display)}
+.t-info strong{font:400 1.5rem/1.1 var(--cond)}
 .t-seek{grid-area:s;width:100%;accent-color:var(--vivid)}
 .t-time{grid-area:t;font:400 .76rem var(--mono);color:var(--mid)}
 .t-dl{grid-area:d;font:700 .76rem var(--mono);color:var(--pale);border:1px solid var(--line);padding:8px 12px;transition:border-color .2s}
@@ -184,7 +171,7 @@ footer a{color:var(--mid)}
 .legal strong,.legal b{color:var(--pale)}
 dialog{margin:auto;max-width:min(92vw,440px);padding:26px;border:1px solid var(--vivid);background:var(--surface);color:var(--pale)}
 dialog::backdrop{background:rgba(7,6,11,.8);backdrop-filter:blur(4px)}
-dialog h3{font:800 1.1rem var(--display);margin-bottom:10px}
+dialog h3{font:400 1.7rem var(--cond);margin-bottom:10px}
 dialog p{color:#b9aecb;margin-bottom:14px}
 dialog label{display:flex;gap:10px;align-items:center;font-size:.9rem}
 .dlg-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
@@ -230,7 +217,7 @@ dialog label{display:flex;gap:10px;align-items:center;font-size:.9rem}
 .bio-photo::before{content:"";position:absolute;z-index:2;top:-10px;left:50%;width:120px;height:28px;background:rgba(243,225,255,.85);transform:translateX(-50%) rotate(-4deg);clip-path:polygon(0 8%,6% 0,12% 10%,100% 0,100% 92%,94% 100%,88% 90%,0 100%)}
 .bio-star{position:absolute;z-index:2;top:-24px;right:-18px;width:64px;height:64px;color:var(--pink);animation:bio-spin 20s linear infinite}
 @keyframes bio-spin{to{transform:rotate(360deg)}}
-.bio-photo figcaption{position:absolute;z-index:2;left:14px;bottom:-10px;background:var(--pale);color:var(--deep);font:700 .68rem var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;transform:rotate(-3deg)}
+.bio-photo figcaption{position:absolute;z-index:2;left:14px;bottom:-10px;background:var(--pale);color:var(--deep);font:400 1.3rem/1 var(--tag);letter-spacing:.02em;padding:5px 12px;transform:rotate(-3deg)}
 
 /* ---------- 14. Loader ---------- */
 #loader{--ld-w:clamp(150px,40vw,220px);position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:var(--ink) radial-gradient(ellipse at 50% 50%,rgba(149,0,255,.35),transparent 60%);transition:transform .85s cubic-bezier(.77,0,.18,1) .3s}
@@ -306,3 +293,53 @@ html.loading{overflow:hidden}
   #loader::after{display:none}
   .track.playing .t-play::after{animation:none}
 }
+
+/* ---------- 16. Dates (lues depuis dates.json) : horaires au centre ---------- */
+.dates li{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px 28px;padding:22px 0}
+.dates .d-left{display:flex;flex-direction:row;align-items:center;gap:20px;flex:none}
+.dates .d-venue{display:flex;flex-direction:column;flex:none}
+.dates .d-hours{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;flex:none}
+.dates .d-hours b{font:900 clamp(1.3rem,3.4vw,2rem)/1 var(--display);color:var(--pale);white-space:nowrap}
+.dates .d-hours span{font:400 .85rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mid)}
+.dates .d-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none}
+.badge.spray{font:400 1.3rem/1 var(--tag);letter-spacing:.02em;text-transform:none;color:var(--pink);border:0;padding:0;transform:rotate(-4deg)}
+@media (max-width:720px){
+  .dates li{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .dates .d-left{flex-direction:column;gap:10px}
+  .dates .d-right{align-items:center}
+}
+
+/* ---------- 17. Lisibilité : tailles minimales, contrastes, confort de lecture ---------- */
+.tag,.eyebrow{font-size:.8rem;letter-spacing:.14em}
+.nav a:not(.nav-logo),.nav-btn{font-size:.82rem}
+.door{padding:24px 26px}
+.door .k{font-size:.78rem}
+.door em{font-size:.85rem}
+.badge{font-size:.74rem}
+.rider h3{font-size:.8rem}
+.dates time{font-size:.78rem}
+.t-time{font-size:.85rem}
+.t-dl{font-size:.85rem;padding:11px 14px}
+.dlg-actions button{font-size:.85rem;padding:12px 18px}
+.legal{font-size:.92rem;line-height:1.65}
+.stub p:not(.tag){font-size:1.05rem;line-height:1.7}
+.socials a{font-size:1rem;padding:20px 0}
+footer{font-size:.8rem;color:#a79cba}
+@media (max-width:720px){.nav a:not(.nav-logo),.nav-btn{font-size:.68rem}}
+
+/* ---------- 18. Médias ---------- */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;width:100%;margin-top:8px}
+.media-card{display:flex;flex-direction:column;gap:8px;padding:24px;min-height:190px;border:1px solid rgba(238,159,255,.35);background:var(--surface);transition:transform .25s,box-shadow .25s,border-color .25s}
+.media-card .plat{font:700 .8rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+.media-card strong{font:400 2rem/1 var(--cond);color:var(--pale)}
+.media-card p{flex:1;font-size:.95rem !important;color:#b9aecb}
+.media-card .go{font:700 .85rem var(--mono);color:var(--pale)}
+a.media-card:hover{transform:translateY(-4px) rotate(-.5deg);border-color:var(--vivid);box-shadow:0 0 28px rgba(234,0,255,.45)}
+.media-card.soon{border-style:dashed}
+.media-card.soon .go{color:var(--mid)}
+.media-wall{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;margin:8px 0 22px;padding:0;border:0;background:none;cursor:pointer}
+.media-wall img{width:100%;aspect-ratio:3/4;object-fit:cover;border:1px solid rgba(238,159,255,.3);filter:saturate(.85);transition:transform .35s,filter .35s}
+.media-wall:hover img{filter:none}
+.media-wall:hover img:nth-child(odd){transform:rotate(-1.2deg)}
+.media-wall:hover img:nth-child(even){transform:rotate(1.2deg)}
+.media-wall span{position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);white-space:nowrap;background:var(--vivid);color:#fff;font:700 .85rem var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:12px 22px;border-radius:999px;box-shadow:0 0 22px rgba(234,0,255,.6)}

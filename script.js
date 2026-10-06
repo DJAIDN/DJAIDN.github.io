@@ -1,5 +1,5 @@
 /* =========================================================
-   script.js — AÏDN · homepage (JS vanilla, aucune dépendance)
+   script.js — AIDN · homepage (JS vanilla, aucune dépendance)
    ========================================================= */
 
 // Signale au CSS que le JS tourne (sinon les .reveal restent visibles)
@@ -7,6 +7,7 @@ document.documentElement.classList.add('js');
 
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
+  initDates();
   initMarquee();
   initNavScroll();
   initReveal();
@@ -170,4 +171,78 @@ function initLoader() {
     }, 1250);
     try { sessionStorage.setItem('aidn-seen', '1'); } catch (e) {}
   })(start);
+}
+
+/* Dates : lues depuis dates.json (modifiable sans toucher au code).
+   "22:00 - 04:00" -> libellé "22:00 – 04:00" + durée "6 h de set" (gère le passage de minuit). */
+function parseHours(str) {
+  const m = /(\d{1,2})[:h](\d{2})\s*[-–—]\s*(\d{1,2})[:h](\d{2})/.exec(str || '');
+  if (!m) return { label: str || '', length: '' };
+  const pad = n => String(n).padStart(2, '0');
+  let diff = (+m[3] * 60 + +m[4]) - (+m[1] * 60 + +m[2]);
+  if (diff <= 0) diff += 24 * 60;
+  const h = Math.floor(diff / 60), min = diff % 60;
+  return {
+    label: `${pad(m[1])}:${m[2]} – ${pad(m[3])}:${m[4]}`,
+    length: `${h} h${min ? ' ' + pad(min) : ''} de set`
+  };
+}
+
+async function initDates() {
+  const list = document.getElementById('dates-list');
+  const note = document.getElementById('dates-note');
+  if (!list) return;
+  const el = (tag, text, cls) => {
+    const n = document.createElement(tag);
+    if (text) n.textContent = text;   // textContent : le JSON ne peut pas injecter de HTML
+    if (cls) n.className = cls;
+    return n;
+  };
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const STATUS = { confirmed: 'Confirmé', pending: 'À confirmer' };
+
+  try {
+    const res = await fetch('dates.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    const t = new Date();
+    const today = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+    const upcoming = (data.dates || [])
+      .filter(x => x.date >= today && x.status !== 'cancelled')
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    upcoming.forEach((x, i) => {
+      const d = new Date(x.date + 'T12:00');
+      const hours = parseHours(x.duration);
+
+      // gauche : date + lieu
+      const time = el('time');
+      time.dateTime = x.date;
+      time.append(
+        el('b', String(d.getDate()).padStart(2, '0')),
+        el('span', cap(d.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '')) + ' · ' + cap(d.toLocaleDateString('fr-FR', { weekday: 'short' }).replace('.', '')))
+      );
+      const venue = el('div', '', 'd-venue');
+      venue.append(el('strong', x.venue), el('span', x.city));
+      const left = el('div', '', 'd-left');
+      left.append(time, venue);
+
+      // centre : horaires du set
+      const mid = el('div', '', 'd-hours');
+      if (hours.label) mid.append(el('b', hours.label));
+      if (hours.length) mid.append(el('span', hours.length));
+
+      // droite : prochaine date + statut
+      const right = el('div', '', 'd-right');
+      if (i === 0) right.append(el('span', 'Prochaine date', 'badge spray'));
+      if (STATUS[x.status]) right.append(el('span', STATUS[x.status], 'badge'));
+
+      const li = el('li');
+      li.append(left, mid, right);
+      list.append(li);
+    });
+    note.textContent = upcoming.length ? "D'autres dates arrivent." : 'Aucune date annoncée pour le moment.';
+  } catch (err) {
+    note.textContent = 'Dates momentanément indisponibles. Contacte-moi pour connaître mes disponibilités.';
+  }
 }
