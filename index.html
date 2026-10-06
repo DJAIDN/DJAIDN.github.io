@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800;900&family=Manrope:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="gallery.css">
 <script>document.documentElement.classList.add('js');setTimeout(function(){document.documentElement.classList.add('ready')},7000);try{if(!sessionStorage.getItem('aidn-seen'))document.documentElement.classList.add('loading')}catch(e){}</script>
@@ -104,10 +105,10 @@
   </section>
 
   <section class="stub reveal" id="booking">
-    <p class="tag">02 - Pour les pros</p>
+    <p class="tag">02 - Informations pratiques</p>
     <h2 class="chrome">Booking</h2>
     <p>Disponible pour des dates en <strong>Vendée</strong>, à <strong>Nantes &amp; alentours</strong>, en semaine comme le week-end. Contact 7j/7.</p>
-    <details class="rider" open>
+    <details class="rider" false>
       <summary>Rider technique</summary>
       <div class="rider-cols">
         <div>
@@ -177,17 +178,17 @@
         if (i === 0) li.append(el('span', 'Prochaine date', 'badge'));
         list.append(li);
       });
-      if (!upcoming.length) note.textContent = "Aucune date pour le moment, d'autres arrivent.";
+      if (!upcoming.length) note.textContent = "Dates à venir...";
     } catch (err) {
-      note.textContent = "Les dates arrivent bientôt.";
+      note.textContent = "Dates prochainement disponibles...";
     }
   })();
   </script>
 
   <section class="stub reveal" id="galerie">
-    <p class="tag">04 - Images</p>
+    <p class="tag">04 - Medias</p>
     <h2 class="chrome">Galerie</h2>
-  <p>Le mur AIDN : portraits, live &amp; sets, backstage.</p>
+    <p>portraits, live &amp; sets, backstage.</p>
     <!-- id attendu par gallery.js : ouvre le mur d'images -->
     <button type="button" id="galleryTriggerMobile" class="open-gal">Ouvrir le mur d'images →</button>
   </section>

@@ -5,6 +5,7 @@
     {
       "id": "maximo-club-2026-10-08",
       "date": "2026-10-08",
+      "duration": "22:00 - 04:00",
       "venue": "Maximo Club",
       "city": "Nantes",
       "status": "confirmed"
@@ -12,6 +13,7 @@
     {
       "id": "private-2026-10-31",
       "date": "2026-10-31",
+      "duration": "22:00 - 02:00",
       "venue": "Private Event",
       "city": "Vendée",
       "status": "confirmed"

@@ -4,16 +4,41 @@
    6. Sections  7. Responsive / accessibilité
    ========================================================= */
 
+@font-face {
+  font-family: 'Spray Tag';
+  src: url('assets/fonts/GrimeSlime-Regular.woff2') format('woff2'); /* Ajuste le nom exact de ton fichier */
+  font-weight:900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Coolvetica Condensed';
+  src: url('assets/fonts/Coolvetica-Rg.woff2') format('woff2'); /* Ajuste le nom exact de ton fichier */
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* ---------- 1. Variables : palette de la charte + effet chrome ---------- */
-:root{
-  --ink:#07060b; --surface:#120d1c;
-  --deep:#500e42; --vivid:#ea00ff; --mid:#c766ff; --pink:#ee9fff; --pale:#f3e1ff;
-  --chrome:linear-gradient(120deg,#fff 0%,#c9c4d6 30%,#7d768f 52%,#f3e1ff 74%,#fff 100%);
-  --display:'Unbounded',sans-serif; --body:'Manrope',sans-serif; --mono:'Space Mono',monospace;
-  --pad:clamp(20px,5vw,64px);
+:root {
+  --ink: #07060b; 
+  --surface: #120d1c;
+  --deep: #500e42; 
+  --vivid: #ea00ff; 
+  --mid: #c766ff; 
+  --pink: #ee9fff; 
+  --pale: #f3e1ff;
+  --chrome: linear-gradient(120deg,#fff 0%,#c9c4d6 30%,#7d768f 52%,#f3e1ff 74%,#fff 100%);
+  
+  /* Nouvelles polices */
+  --display: 'Archivo', sans-serif;
+  --body: 'Coolvetica Condensed', sans-serif;
+  --mono: 'Spray Tag', sans-serif;
+  
+  --pad: clamp(20px,5vw,64px);
 }
 
 /* ---------- 2. Base ---------- */
+
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:80px}
 body{background:var(--ink);color:var(--pale);font:500 1rem/1.6 var(--body);overflow-x:hidden}
@@ -21,6 +46,12 @@ img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px solid var(--pink);outline-offset:3px}
 ::selection{background:var(--vivid);color:#fff}
+
+/* Application de la largeur 125 (stretch) et du poids 900 pour tous les éléments en Display (Archivo) */
+h1, h2, h3, .marquee-track span, .door strong, .dates b, .dates strong, .t-info strong, dialog h3, .contact-big, .brand-name {
+    font-stretch: 125%;
+    font-weight: 900;
+}
 
 /* Grain : la texture qui casse le côté « lisse » */
 .grain{
@@ -92,8 +123,8 @@ a{color:inherit;text-decoration:none}
 .stub h1,.stub h2{font:900 clamp(2.2rem,6vw,4rem)/1 var(--display);text-transform:uppercase}
 .stub p:not(.tag){color:#b9aecb;max-width:52ch}
 .slot{width:100%;min-height:150px;margin-top:10px;display:grid;place-items:center;border:1px dashed rgba(238,159,255,.35);border-radius:4px;font:400 .76rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--mid)}
-.mail{font:700 clamp(1rem,3vw,1.6rem) var(--mono);color:var(--pink);border-bottom:2px solid var(--vivid)}
-footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding:28px var(--pad);border-top:1px solid rgba(243,225,255,.1);font:400 .72rem var(--mono);color:#8f84a3}
+.mail{font:700 clamp(1rem,3vw,1.6rem) var(--body);color:var(--pink);border-bottom:2px solid var(--vivid)}
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding:28px var(--pad);border-top:1px solid rgba(243,225,255,.1);font:400 .72rem var(--body);color:#8f84a3}
 footer a{color:var(--mid)}
 
 /* Apparition au scroll (activée seulement si le JS tourne) */
@@ -125,7 +156,7 @@ footer a{color:var(--mid)}
 .rider{border:1px solid rgba(238,159,255,.3);border-radius:4px;padding:18px 22px}
 .rider summary{font:800 1.1rem var(--display);text-transform:uppercase;cursor:pointer}
 .rider-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:16px}
-.rider h3{font:700 .72rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--pink);margin-bottom:8px}
+.rider h3{font:700 .72rem var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--pink);margin-bottom:8px}
 .rider li{margin-left:1.1em;list-style:square;color:#b9aecb}
 .rider em{font-style:normal;color:var(--mid);margin-right:.4em}
 .dates li,.socials a{display:flex;align-items:center;gap:20px;padding:18px 0;border-bottom:1px solid rgba(243,225,255,.12)}
@@ -136,7 +167,7 @@ footer a{color:var(--mid)}
 .dates span{color:#b9aecb}
 .badge{font:700 .66rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--pink);border:1px solid rgba(238,159,255,.4);padding:3px 8px;align-self:flex-start}
 .socials a{justify-content:space-between;font:700 .9rem var(--mono);text-transform:uppercase}
-.socials a span{color:var(--mid)}
+.socials a span{color:var(--mid);font-family: var(--body);}
 .socials a:hover span{color:var(--pink)}
 
 /* ---------- 10. Lecteur audio ---------- */
