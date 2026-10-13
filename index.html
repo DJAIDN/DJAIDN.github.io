@@ -226,14 +226,11 @@
     <p class="tag">03 - Agenda</p>
     <h2 class="chrome">Dates</h2>
     <ul class="dates" id="dates-list"></ul>
-    <div class="dates-history" id="dates-history" hidden>
-      <button type="button" class="history-toggle" aria-expanded="false" aria-controls="history-list">
-        <span>Historique</span>
-        <em>Voir les anciennes dates</em>
-      </button>
-      <div class="history-list" id="history-list" aria-live="polite"></div>
-    </div>
     <p id="dates-note">Chargement des dates…</p>
+    <div class="dates-history" id="dates-history" hidden>
+      <h3 class="history-title"><span>Historique</span><em id="history-count"></em></h3>
+      <div class="history-marquee" id="history-marquee"></div>
+    </div>
   </section>
 
   <section class="stub reveal" id="medias">
@@ -262,9 +259,9 @@
     </div>
     <!-- id attendu par gallery.js : ouvre le mur d'images -->
     <button type="button" id="galleryTriggerMobile" class="media-wall" aria-label="Ouvrir le mur d'images">
-      <img src="assets/photos/Mousse2.jpg" alt="" loading="lazy" decoding="async">
-      <img src="assets/photos/Austra3.JPG" alt="" loading="lazy" decoding="async">
-      <img src="assets/photos/Austra1.JPG" alt="" loading="lazy" decoding="async">
+      <div class="mw-cell"><img src="assets/photos/Mousse2.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="mw-cell"><img src="assets/photos/Austra3.JPG" alt="" loading="lazy" decoding="async"></div>
+      <div class="mw-cell"><img src="assets/photos/Austra1.JPG" alt="" loading="lazy" decoding="async"></div>
       <span>Ouvrir le mur d'images →</span>
     </button>
   </section>
