@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-13T21:28:54.252Z",
+  "updated": "2026-10-13T21:30:16.476Z",
   "dates": [
     {
       "id": "camping-l-ocean-2026-08-05",
@@ -8,6 +8,15 @@
       "venue": "Camping L’Ocean",
       "city": "SJDM",
       "time": "15:00",
+      "duration": 60,
+      "status": "confirmed"
+    },
+    {
+      "id": "australian-cafe-2026-09-17",
+      "date": "2026-09-17",
+      "venue": "Australian Cafe",
+      "city": "Nantes",
+      "time": "22:00",
       "duration": 60,
       "status": "confirmed"
     },
