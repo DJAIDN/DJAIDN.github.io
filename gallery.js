@@ -24,18 +24,18 @@ const GALLERY_DATA = [
   {
     title: 'Live & Sets',
     items: [
-      { src: 'assets/Mousse1.jpg', alt: 'Portrait AIDN 1' },
-      { src: 'assets/Mousse2.jpg', alt: 'Portrait AIDN 2' },
-      { src: 'assets/Mousse3.jpg', alt: 'Portrait AIDN 3' },
-      { src: 'assets/Austra1.JPG', alt: 'Portrait AIDN 1' },
-      { src: 'assets/Austra2.JPG', alt: 'Portrait AIDN 2' },
-      { src: 'assets/Austra3.JPG', alt: 'Portrait AIDN 3' },
+      { src: 'assets/photos/Mousse1.jpg', alt: 'Portrait AIDN 1' },
+      { src: 'assets/photos/Mousse2.jpg', alt: 'Portrait AIDN 2' },
+      { src: 'assets/photos/Mousse3.jpg', alt: 'Portrait AIDN 3' },
+      { src: 'assets/photos/Austra1.JPG', alt: 'Portrait AIDN 1' },
+      { src: 'assets/photos/Austra2.JPG', alt: 'Portrait AIDN 2' },
+      { src: 'assets/photos/Austra3.JPG', alt: 'Portrait AIDN 3' },
     ],
   },
   {
     title: 'Backstage',
     items: [
-      { src: 'assets/Austra4.PNG', alt: 'Portrait AIDN 1' },
+      { src: 'assets/photos/Austra4.PNG', alt: 'Portrait AIDN 1' },
       { src: null, alt: 'Photo backstage à venir' },
       { src: null, alt: 'Photo backstage à venir' },
     ],

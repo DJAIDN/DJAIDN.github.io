@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initDates();
   initMarquee();
+  setTimeout(initMediaWallSlideshow, 0);
   initNavScroll();
   initReveal();
   initPauseOffscreen();
@@ -21,6 +22,82 @@ document.addEventListener('DOMContentLoaded', () => {
 function initMarquee() {
   const track = document.getElementById('track');
   if (track) track.innerHTML += track.innerHTML;
+}
+
+/* Mur d'images : remplace aléatoirement une photo par une autre de la galerie. */
+function initMediaWallSlideshow() {
+  const wall = document.getElementById('galleryTriggerMobile');
+  if (!wall || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const images = [...wall.querySelectorAll('img')];
+  const photos = [...new Set(
+    [...document.querySelectorAll('.gallery-tile.has-img')]
+      .map(tile => tile.dataset.src)
+      .filter(Boolean)
+      .map(src => new URL(src, document.baseURI).href)
+  )];
+  if (!images.length || photos.length <= images.length) return;
+
+  let timer = null;
+  let wallIsVisible = false;
+  let isChanging = false;
+
+  const stop = () => {
+    if (timer === null) return;
+    window.clearInterval(timer);
+    timer = null;
+  };
+
+  const syncTimer = () => {
+    if (!wallIsVisible || document.hidden) {
+      stop();
+    } else if (timer === null) {
+      timer = window.setInterval(showRandomPhoto, 3000);
+    }
+  };
+
+  function showRandomPhoto() {
+    if (isChanging) return;
+
+    const displayed = new Set(images.map(image => new URL(image.src).href));
+    const available = photos.filter(src => !displayed.has(src));
+    if (!available.length) return;
+
+    const image = images[Math.floor(Math.random() * images.length)];
+    const nextSrc = available[Math.floor(Math.random() * available.length)];
+    const preload = new Image();
+    isChanging = true;
+
+    preload.onload = () => {
+      const originalTransition = image.style.transition;
+      image.style.transition = `${window.getComputedStyle(image).transition}, opacity 250ms ease`;
+      image.style.opacity = '0';
+
+      window.setTimeout(() => {
+        image.src = nextSrc;
+        window.requestAnimationFrame(() => {
+          image.style.opacity = '1';
+        });
+        window.setTimeout(() => {
+          image.style.opacity = '';
+          image.style.transition = originalTransition;
+          isChanging = false;
+        }, 300);
+      }, 250);
+    };
+
+    preload.onerror = () => {
+      console.error(`Impossible de charger la photo du mur d'images : ${nextSrc}`);
+      isChanging = false;
+    };
+    preload.src = nextSrc;
+  }
+
+  new IntersectionObserver(([entry]) => {
+    wallIsVisible = entry.isIntersecting;
+    syncTimer();
+  }).observe(wall);
+  document.addEventListener('visibilitychange', syncTimer);
 }
 
 /* Nav : se compacte + progression du scroll (1 mise à jour max par image) */
@@ -210,6 +287,9 @@ function getHours(x) {
 async function initDates() {
   const list = document.getElementById('dates-list');
   const note = document.getElementById('dates-note');
+  const historyWrap = document.getElementById('dates-history');
+  const historyList = document.getElementById('history-list');
+  const historyToggle = document.querySelector('.history-toggle');
   if (!list) return;
   const el = (tag, text, cls) => {
     const n = document.createElement(tag);
@@ -226,15 +306,18 @@ async function initDates() {
     const data = await res.json();
     const t = new Date();
     const today = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
-    const upcoming = (data.dates || [])
-      .filter(x => x.date >= today && x.status !== 'cancelled')
-      .sort((a, b) => a.date.localeCompare(b.date) || String(a.time || '').localeCompare(String(b.time || '')));
+    const allDates = (data.dates || []).slice().sort((a, b) => b.date.localeCompare(a.date) || String(b.time || '').localeCompare(String(a.time || '')));
+
+    const upcoming = allDates
+      .filter(x => x.date >= today && x.status !== 'cancelled');
+
+    const historical = allDates
+      .filter(x => x.date < today && x.status !== 'cancelled');
 
     upcoming.forEach((x, i) => {
       const d = new Date(x.date + 'T12:00');
       const hours = getHours(x);
 
-      // gauche : date + lieu
       const time = el('time');
       time.dateTime = x.date;
       time.append(
@@ -246,12 +329,10 @@ async function initDates() {
       const left = el('div', '', 'd-left');
       left.append(time, venue);
 
-      // centre : horaires du set
       const mid = el('div', '', 'd-hours');
       if (hours.label) mid.append(el('b', hours.label));
       if (hours.length) mid.append(el('span', hours.length));
 
-      // droite : prochaine date + statut
       const right = el('div', '', 'd-right');
       if (i === 0) right.append(el('span', 'Prochaine date', 'badge spray'));
       if (STATUS[x.status]) right.append(el('span', STATUS[x.status], 'badge'));
@@ -260,6 +341,38 @@ async function initDates() {
       li.append(left, mid, right);
       list.append(li);
     });
+
+    if (historical.length) {
+      historyWrap.hidden = false;
+      const formatHistoryDate = (dateStr) => {
+        const d = new Date(dateStr + 'T12:00');
+        return new Intl.DateTimeFormat('fr-FR', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        }).format(d);
+      };
+
+      historical.forEach((x, index) => {
+        const card = el('button', '', 'history-card');
+        card.type = 'button';
+        card.setAttribute('aria-label', `Historique ${x.venue} ${formatHistoryDate(x.date)}`);
+        card.style.setProperty('--offset', `${index * 18}px`);
+        card.innerHTML = `
+          <span class="history-index">${String(index + 1).padStart(2, '0')}</span>
+          <span class="history-date">${formatHistoryDate(x.date)}</span>
+          <strong>${x.venue}</strong>
+          <small>${x.city}</small>
+        `;
+        historyList.appendChild(card);
+      });
+
+      historyToggle.addEventListener('click', () => {
+        const isOpen = historyWrap.classList.toggle('open');
+        historyToggle.setAttribute('aria-expanded', String(isOpen));
+      });
+    }
+
     note.textContent = upcoming.length ? "D'autres dates arrivent." : 'Aucune date annoncée pour le moment.';
   } catch (err) {
     note.textContent = 'Dates momentanément indisponibles. Contacte-moi pour connaître mes disponibilités.';
