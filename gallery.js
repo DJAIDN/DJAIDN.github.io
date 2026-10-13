@@ -35,7 +35,7 @@ const GALLERY_DATA = [
   {
     title: 'Backstage',
     items: [
-      { src: 'assets/photos/Austra4.PNG', alt: 'Portrait AIDN 1' },
+      { src: 'assets/photos/Austra4.jpg', alt: 'Portrait AIDN 1' },
       { src: null, alt: 'Photo backstage à venir' },
       { src: null, alt: 'Photo backstage à venir' },
     ],

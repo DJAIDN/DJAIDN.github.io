@@ -349,6 +349,7 @@ async function initDates() {
       list.append(li);
     });
 
+    injectEventSchema(upcoming);
     note.textContent = upcoming.length ? "D'autres dates arrivent." : 'Aucune date annoncée pour le moment.';
 
     if (historical.length) {
@@ -382,4 +383,43 @@ async function initDates() {
   } catch (err) {
     note.textContent = 'Dates momentanément indisponibles. Contacte-moi pour connaître mes disponibilités.';
   }
+}
+
+/* SEO : les prochaines dates sont aussi publiées en données structurées (schema.org/MusicEvent),
+   générées depuis dates.json : rien à écrire à la main, AIDN Studio reste la seule source. */
+function injectEventSchema(upcoming) {
+  const CITY = { SJDM: 'Saint-Jean-de-Monts' };
+  const pad = n => String(n).padStart(2, '0');
+  const events = upcoming.filter(x => x.status === 'confirmed').map(x => {
+    const hm = /^(\d{1,2})[:h](\d{2})$/.exec(String(x.time || '').trim());
+    const [y, m, d] = x.date.split('-').map(Number);
+    const ev = {
+      '@type': 'MusicEvent',
+      name: `AIDN en DJ set - ${x.venue}, ${CITY[x.city] || x.city}`,
+      startDate: x.date,
+      eventStatus: 'https://schema.org/EventScheduled',
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      location: {
+        '@type': 'Place',
+        name: x.venue,
+        address: { '@type': 'PostalAddress', addressLocality: CITY[x.city] || x.city, addressCountry: 'FR' }
+      },
+      performer: { '@type': 'Person', name: 'AIDN', url: 'https://djaidn.fr/' },
+      image: 'https://djaidn.fr/assets/og-aidn.jpg',
+      url: 'https://djaidn.fr/#dates'
+    };
+    if (hm) {
+      const start = Date.UTC(y, m - 1, d, +hm[1], +hm[2]);   // heure locale du lieu, sans fuseau
+      const iso = t => { const u = new Date(t); return `${u.getUTCFullYear()}-${pad(u.getUTCMonth() + 1)}-${pad(u.getUTCDate())}T${pad(u.getUTCHours())}:${pad(u.getUTCMinutes())}`; };
+      ev.startDate = iso(start);
+      const dur = Number(x.duration);
+      if (Number.isFinite(dur) && dur > 0) ev.endDate = iso(start + dur * 60000);
+    }
+    return ev;
+  });
+  if (!events.length) return;
+  const tag = document.createElement('script');
+  tag.type = 'application/ld+json';
+  tag.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': events });
+  document.head.appendChild(tag);
 }
