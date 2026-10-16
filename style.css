@@ -295,22 +295,22 @@ html.loading{overflow:hidden}
 }
 
 /* ---------- 16. Dates (lues depuis dates.json) : horaires au centre ---------- */
-.dates li{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px 28px;padding:22px 0}
+.dates li{display:grid;grid-template-columns:190px auto 1fr;align-items:center;gap:16px 32px;padding:22px 0}
 .dates .d-left{display:flex;flex-direction:row;align-items:center;gap:20px;flex:none}
 .dates .d-venue{display:flex;flex-direction:column;flex:none}
-.dates .d-hours{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;flex:none}
+.dates .d-hours{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;flex:none;justify-self:end}
 .dates .d-hours b{font:900 clamp(1.3rem,3.4vw,2rem)/1 var(--display);color:var(--pale);white-space:nowrap}
 .dates .d-hours span{font:400 .85rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mid)}
-.dates .d-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none}
-.badge.spray{font:400 1.3rem/1 var(--tag);letter-spacing:.02em;text-transform:none;color:var(--pink);border:0;padding:0;transform:rotate(-4deg)}
+.dates .d-right{display:flex;flex-direction:column;align-items:flex-start;gap:8px;flex:none;order:-1}
+.badge.spray{font:400 1.3rem/1 var(--tag);letter-spacing:.02em;text-transform:none;color:var(--pink);border:0;padding:0;white-space:nowrap;transform:rotate(-4deg);transform-origin:left center}
 
 /* Historique : dates passées, centrées, en défilement continu (même principe que le bandeau papier) */
 .dates li:last-child{border-bottom:0}
 .dates-history{width:100%;margin-top:clamp(28px,5vw,52px);display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}
 .dates-history[hidden]{display:none}
-.history-title{display:flex;flex-direction:column;align-items:center;gap:6px;font:700 .8rem var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--pink)}
-.history-title span::before,.history-title span::after{content:"✦";color:var(--vivid);margin:0 .9em}
-.history-title em{font:400 .76rem var(--mono);font-style:normal;letter-spacing:.1em;color:var(--mid)}
+.history-title{display:flex;flex-direction:column;align-items:center;gap:8px}
+.history-title span{font:900 clamp(1.8rem,5vw,2.8rem)/1 var(--display);letter-spacing:.02em;text-transform:uppercase;color:var(--pale)}
+.history-title em{font:700 .95rem var(--mono);font-style:normal;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
 .history-marquee{width:100%;overflow:hidden;padding:10px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
 .history-track{display:flex;width:max-content;animation:history-scroll var(--dur,36s) linear infinite}
 .history-marquee:hover .history-track{animation-play-state:paused}
@@ -332,9 +332,12 @@ html.loading{overflow:hidden}
 }
 
 @media (max-width:720px){
-  .dates li{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .dates li{grid-template-columns:1fr;justify-items:center;text-align:center;gap:12px}
   .dates .d-left{flex-direction:column;gap:10px}
-  .dates .d-right{align-items:center}
+  .dates .d-right{align-items:center;justify-self:center}
+  .dates .d-right:empty{display:none}
+  .dates .d-hours{justify-self:center}
+  .badge.spray{transform-origin:center}
 }
 
 /* ---------- 17. Lisibilité : tailles minimales, contrastes, confort de lecture ---------- */
