@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-13T21:30:16.476Z",
+  "updated": "2026-11-02T21:55:32.827Z",
   "dates": [
     {
       "id": "camping-l-ocean-2026-08-05",
@@ -36,6 +36,15 @@
       "city": "Nantes",
       "time": "22:00",
       "duration": 300,
+      "status": "confirmed"
+    },
+    {
+      "id": "d3-2026-11-05",
+      "date": "2026-11-05",
+      "venue": "D3",
+      "city": "Nantes",
+      "time": "22:00",
+      "duration": 360,
       "status": "confirmed"
     }
   ]
