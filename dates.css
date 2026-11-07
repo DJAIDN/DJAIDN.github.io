@@ -1,0 +1,181 @@
+/* =========================================================
+   dates.css — Section « Dates » : agenda Y2K brut
+   Noir · blanc pur · gris chrome. Le bandeau « Prochaine date » est en
+   métal brossé (bandes à arêtes nettes) ; l'anneau de focus clavier est blanc.
+   Aucun border-radius, aucun flou, aucun dégradé doux : bordures
+   1px franches, ombres pleines (blur 0), hachures à arêtes nettes.
+   Les changements d'état sont instantanés (aucune transition).
+   À charger APRÈS style.css.
+   ========================================================= */
+
+#dates{
+  --d-silver:#c9c9cf;
+  --d-focus:#fff;
+  /* rail · date · lieu · horaires · carte (partagé par l'en-tête et les cartes) */
+  --cols:44px 148px minmax(0,1fr) 200px 150px;
+}
+#dates ::selection{background:#fff;color:#000}
+#dates .tag{color:var(--d-silver)}
+#dates h2.chrome{background:none;color:#fff}
+
+/* Texte réservé aux lecteurs d'écran */
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- En-tête de tableau (décoratif, masqué sur mobile) ---------- */
+.agenda-head{display:grid;grid-template-columns:var(--cols);width:100%;padding:0 1px 8px;border-bottom:1px solid #fff}
+.agenda-head[hidden]{display:none}
+.agenda-head>span{padding:0 22px;font:700 .8rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--d-silver)}
+
+/* ---------- Liste des dates à venir ---------- */
+.agenda{list-style:none;display:grid;gap:22px;width:100%}
+.agenda:empty{display:none}
+
+/* ---------- Carte = un seul <a> cliquable de bout en bout ---------- */
+.date-card{
+  --bg:#000;--fg:#fff;--dim:#a8a8b0;--ln:#fff;
+  position:relative;display:grid;
+  grid-template-columns:var(--cols);
+  grid-template-areas:"rail date venue hours go";
+  min-height:140px;
+  background:var(--bg);color:var(--fg);
+  border:1px solid #fff;box-shadow:4px 4px 0 #fff;
+  cursor:crosshair;
+}
+
+/* Rail de gauche : hachures au repos, plaque de métal brossé pour la prochaine date */
+.dc-rail{
+  grid-area:rail;display:grid;place-items:center;overflow:hidden;
+  background:repeating-linear-gradient(135deg,var(--dim) 0 1px,transparent 1px 6px);
+}
+.dc-flag{
+  --dir:90deg; /* bandes le long du rail vertical (desktop) */
+  background:linear-gradient(var(--dir),#e4e4ea 0 24%,#fff 24% 38%,#a6a6af 38% 66%,#d2d2d9 66% 100%);
+  color:#000;padding:12px 0;
+  font:700 .72rem var(--mono);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
+  writing-mode:vertical-rl;transform:rotate(180deg);
+}
+
+/* Cellules : séparées par des filets 1px, comme un tableau de données */
+.dc-date,.dc-venue,.dc-hours,.dc-go{
+  display:flex;flex-direction:column;justify-content:center;gap:6px;
+  padding:18px 22px;border-left:1px solid var(--ln);
+}
+.dc-date{grid-area:date;align-items:flex-start}
+.dc-date b{font:900 clamp(2.3rem,4vw,2.9rem)/.9 var(--display)}
+.dc-date span,.dc-city,.dc-hours span,.dc-pending{
+  font:700 .8rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);
+}
+.dc-date span{white-space:nowrap}
+
+.dc-venue{grid-area:venue;min-width:0}
+.dc-name{
+  display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  font:400 clamp(2rem,4.2vw,2.8rem)/1.05 var(--cond);text-transform:uppercase;
+}
+.date-card .dc-name{color:inherit} /* bat « .stub strong » de style.css */
+.dc-marq{display:inline}
+.dc-marq>span+span{display:none} /* la copie sert uniquement à la boucle du marquee */
+
+.dc-hours{grid-area:hours}
+.dc-hours b{font:700 1.2rem/1.1 var(--mono);white-space:nowrap}
+.dc-pending{align-self:flex-start;padding:2px 6px;border:1px dashed currentColor}
+
+.dc-go{grid-area:go;font:700 .95rem var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.dc-go i{display:inline-block;font-style:normal}
+
+/* ---------- Carte d'historique : version compacte, verticale, pour la bande ---------- */
+.date-card.is-past{
+  --dim:#9a9aa3;
+  flex:none;width:260px;min-height:0;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"rail" "date" "venue" "go";
+  border-color:#b4b4bc;box-shadow:4px 4px 0 #6f6f78;
+}
+.date-card.is-past .dc-rail{min-height:12px}
+.date-card.is-past>:not(.dc-rail){border-left:0;border-top:1px solid var(--ln);padding:12px 16px}
+.date-card.is-past .dc-date{flex-direction:row;justify-content:flex-start;align-items:baseline;gap:12px}
+.date-card.is-past .dc-date b{font-size:2rem}
+.date-card.is-past .dc-name{font-size:1.9rem}
+.date-card.is-past .dc-go{flex-direction:row;justify-content:flex-start;align-items:center;min-height:48px}
+
+/* ---------- Survol / focus clavier / appui : inversion stricte + effet « touche enfoncée » ---------- */
+.date-card:focus-visible,.date-card:active{
+  --bg:#fff;--fg:#000;--dim:#3d3d44;--ln:#000;
+  transform:translate(4px,4px);box-shadow:0 0 0 #fff;
+}
+.date-card:focus-visible{outline:3px solid var(--d-focus);outline-offset:4px}
+.date-card:focus-visible .dc-go i,.date-card:active .dc-go i{transform:translate(3px,-3px)}
+@media (hover:hover){
+  .date-card:hover{
+    --bg:#fff;--fg:#000;--dim:#3d3d44;--ln:#000;
+    transform:translate(4px,4px);box-shadow:0 0 0 #fff;
+  }
+  .date-card:hover .dc-go i{transform:translate(3px,-3px)}
+}
+
+/* Marquee du nom du lieu (desktop, si le mouvement est autorisé). La piste = nom /// nom ///
+   et se décale de -50% par paliers (steps) : défilement « afficheur LED » plutôt que fluide. */
+@keyframes dc-marq{to{transform:translateX(-50%)}}
+@media (min-width:861px) and (prefers-reduced-motion:no-preference){
+  .date-card:hover .dc-name,.date-card:focus-visible .dc-name{text-overflow:clip}
+  .date-card:hover .dc-marq,.date-card:focus-visible .dc-marq{
+    display:inline-flex;
+    animation:dc-marq max(5s,calc(var(--len,12)*.42s)) steps(32) infinite;
+  }
+  .date-card:hover .dc-marq>span,.date-card:focus-visible .dc-marq>span{flex:none;display:block}
+  .date-card:hover .dc-marq>span::after,.date-card:focus-visible .dc-marq>span::after{
+    content:"///";margin:0 .5em;color:var(--dim);
+  }
+}
+
+/* ---------- Ligne d'état sous la liste (style terminal) ---------- */
+#dates .agenda-note{
+  width:100%;max-width:none;padding:18px 22px;border:1px dashed var(--d-silver);
+  font:700 .9rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--d-silver);
+}
+#dates .agenda-note::before{content:"> "}
+#dates .agenda-note::after{content:"_";animation:dc-blink 1s steps(1) infinite}
+@keyframes dc-blink{50%{opacity:0}}
+
+/* ---------- HISTORIQUE : dalle blanche pleine largeur, puis bande en défilement continu ---------- */
+.archive{display:flex;flex-direction:column;gap:26px;width:100%;margin-top:clamp(36px,6vw,72px)}
+.archive[hidden]{display:none}
+.archive-title{
+  padding:12px clamp(14px,3vw,28px);background:#fff;color:#000;
+  font:900 clamp(1.6rem,7.6vw,5.2rem)/.95 var(--display);letter-spacing:-.01em;text-transform:uppercase;
+}
+/* Coupe franche (pas de fondu) ; le padding évite de rogner bordure, ombre et anneau de focus */
+.archive-marquee{width:100%;overflow:hidden;padding:10px 10px 14px}
+.archive-track{display:flex;width:max-content;animation:archive-scroll var(--dur,36s) linear infinite}
+.archive-marquee:hover .archive-track,.archive-marquee:focus-within .archive-track{animation-play-state:paused}
+.archive-group{display:flex;gap:18px;padding-right:18px;list-style:none}
+@keyframes archive-scroll{to{transform:translateX(-50%)}}
+
+/* ---------- Mobile / tablette : les dates s'empilent verticalement ---------- */
+@media (max-width:860px){
+  .agenda-head{display:none}
+  .date-card{
+    grid-template-columns:120px minmax(0,1fr);
+    grid-template-areas:"rail rail" "date venue" "hours hours" "go go";
+    min-height:0;
+  }
+  .dc-rail{min-height:14px}
+  .dc-flag{--dir:180deg;writing-mode:horizontal-tb;transform:none;padding:8px 14px;place-items:center start}
+  .dc-date,.dc-venue,.dc-hours,.dc-go{border-left:0;border-top:1px solid var(--ln);padding:14px 16px}
+  .dc-venue{border-left:1px solid var(--ln)}
+  .dc-date b{font-size:2.3rem}
+  .dc-name{white-space:normal;text-overflow:clip;overflow-wrap:anywhere;font-size:clamp(1.9rem,8vw,2.4rem)}
+  .dc-hours{flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 16px}
+  .dc-go{flex-direction:row;justify-content:space-between;align-items:center;min-height:52px}
+  .date-card.is-past{width:220px}
+  .date-card.is-past .dc-go{justify-content:flex-start}
+  .date-card.is-past .dc-name{font-size:1.7rem;white-space:nowrap;text-overflow:ellipsis}
+}
+
+/* Mouvement réduit : plus de défilement, l'historique se range en grille statique */
+@media (prefers-reduced-motion:reduce){
+  #dates .agenda-note::after{animation:none}
+  .archive-track{animation:none;width:auto}
+  .archive-group{flex-wrap:wrap;padding-right:0}
+  .archive-group[aria-hidden="true"],.h-dup{display:none}
+}

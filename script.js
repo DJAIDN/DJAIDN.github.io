@@ -289,12 +289,22 @@ function getHours(x) {
   return { label: '', length: '' };
 }
 
+/* Lien d'une date : recherche Google Maps du lieu (aucun champ à ajouter dans dates.json).
+   Si une date porte un jour un champ « url » en http(s), il est prioritaire.
+   CITY_NAMES : abréviations -> nom complet, uniquement pour la recherche. */
+const CITY_NAMES = { SJDM: 'Saint-Jean-de-Monts' };
+function venueUrl(x) {
+  if (/^https?:\/\//i.test(String(x.url || ''))) return x.url;
+  const q = [x.venue, CITY_NAMES[x.city] || x.city].filter(Boolean).join(' ');
+  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+}
+
 async function initDates() {
   const list = document.getElementById('dates-list');
+  const head = document.getElementById('dates-head');
   const note = document.getElementById('dates-note');
   const historyWrap = document.getElementById('dates-history');
   const historyBox = document.getElementById('history-marquee');
-  const historyCount = document.getElementById('history-count');
   if (!list) return;
   const el = (tag, text, cls) => {
     const n = document.createElement(tag);
@@ -303,8 +313,68 @@ async function initDates() {
     return n;
   };
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
-  // Une date à venir est forcément confirmée : seul « À confirmer » mérite une pastille
-  const STATUS = { pending: 'À confirmer' };
+
+  /* Une date = un seul <a> cliquable de bout en bout.
+     next : bandeau « Prochaine date » — past : carte compacte de l'historique
+     (dup : copie du défilement, ignorée du clavier et des lecteurs d'écran). */
+  const buildCard = (x, { next = false, past = false, dup = false } = {}) => {
+    const d = new Date(x.date + 'T12:00');
+    const venueName = String(x.venue || '');
+
+    const card = el('a', '', 'date-card' + (next ? ' is-next' : '') + (past ? ' is-past' : ''));
+    card.href = venueUrl(x);
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
+    if (dup) card.tabIndex = -1;
+
+    // rail : texte lisible pour la prochaine date, simple hachure décorative sinon
+    const rail = next ? el('span', 'Prochaine date', 'dc-rail dc-flag') : el('span', '', 'dc-rail');
+    if (!next) rail.setAttribute('aria-hidden', 'true');
+
+    const time = el('time', '', 'dc-date');
+    time.dateTime = x.date;
+    const month = cap(d.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', ''));
+    const tail = past ? String(d.getFullYear()) : cap(d.toLocaleDateString('fr-FR', { weekday: 'short' }).replace('.', ''));
+    time.append(el('b', String(d.getDate()).padStart(2, '0')), el('span', month + ' / ' + tail));
+
+    // nom du lieu : 2 copies pour la boucle du marquee (la 2e est masquée aux lecteurs d'écran)
+    const marq = el('span', '', 'dc-marq');
+    marq.style.setProperty('--len', venueName.length);
+    const ghost = el('span', venueName);
+    ghost.setAttribute('aria-hidden', 'true');
+    marq.append(el('span', venueName), ghost);
+    const name = el('strong', '', 'dc-name');
+    name.append(marq);
+    const venue = el('div', '', 'dc-venue');
+    venue.append(name, el('span', x.city, 'dc-city'));
+
+    const arrow = el('i', '↗');
+    arrow.setAttribute('aria-hidden', 'true');
+    const label = el('span', 'Carte', 'dc-go-l');
+    label.append(' ', arrow);
+    const go = el('span', '', 'dc-go');
+    go.append(label);
+
+    card.append(rail, time, venue);
+
+    // horaires : uniquement pour les dates à venir (l'historique reste compact)
+    if (!past) {
+      const hours = getHours(x);
+      const mid = el('div', '', 'dc-hours');
+      if (hours.label) mid.append(el('b', hours.label));
+      if (hours.length) mid.append(el('span', hours.length));
+      if (!hours.label && !hours.length) mid.append(el('b', '—'));
+      // Une date à venir est forcément confirmée : seul « À confirmer » mérite une pastille
+      if (x.status === 'pending') mid.append(el('span', 'À confirmer', 'dc-pending'));
+      card.append(mid);
+    }
+
+    card.append(go, el('span', ', ouvrir le lieu sur Google Maps (nouvel onglet)', 'sr'));
+    const li = el('li', '', dup ? 'h-dup' : '');
+    if (dup) li.setAttribute('aria-hidden', 'true');
+    li.append(card);
+    return li;
+  };
 
   try {
     const res = await fetch('dates.json', { cache: 'no-cache' });
@@ -321,63 +391,30 @@ async function initDates() {
     const upcoming = allDates.filter(x => x.date >= today);
     const historical = allDates.filter(x => x.date < today).reverse(); // la plus récente d'abord
 
-    upcoming.forEach((x, i) => {
-      const d = new Date(x.date + 'T12:00');
-      const hours = getHours(x);
-
-      const time = el('time');
-      time.dateTime = x.date;
-      time.append(
-        el('b', String(d.getDate()).padStart(2, '0')),
-        el('span', cap(d.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '')) + ' · ' + cap(d.toLocaleDateString('fr-FR', { weekday: 'short' }).replace('.', '')))
-      );
-      const venue = el('div', '', 'd-venue');
-      venue.append(el('strong', x.venue), el('span', x.city));
-      const left = el('div', '', 'd-left');
-      left.append(time, venue);
-
-      const mid = el('div', '', 'd-hours');
-      if (hours.label) mid.append(el('b', hours.label));
-      if (hours.length) mid.append(el('span', hours.length));
-
-      const right = el('div', '', 'd-right');
-      if (i === 0) right.append(el('span', 'Prochaine date', 'badge spray'));
-      if (STATUS[x.status]) right.append(el('span', STATUS[x.status], 'badge'));
-
-      const li = el('li');
-      li.append(left, mid, right);
-      list.append(li);
-    });
+    upcoming.forEach((x, i) => list.append(buildCard(x, { next: i === 0 })));
+    if (head) head.hidden = !upcoming.length;
 
     injectEventSchema(upcoming);
     note.textContent = upcoming.length ? "D'autres dates arrivent." : 'Aucune date annoncée pour le moment.';
 
+    // Historique : bande en défilement continu, aucune donnée chiffrée affichée
     if (historical.length) {
-      const fmt = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
-      const makeCard = (x, dup) => {
-        const li = el('li', '', 'history-card' + (dup ? ' h-dup' : ''));
-        if (dup) li.setAttribute('aria-hidden', 'true');
-        const time = el('time', fmt.format(new Date(x.date + 'T12:00')).replace('.', ''));
-        time.dateTime = x.date;
-        li.append(time, el('strong', x.venue), el('span', x.city));
-        return li;
-      };
-
       // Peu de dates : on répète la série pour que la bande remplisse toute la largeur
-      const CARD = 252; // largeur carte + gap (px)
-      const reps = Math.max(1, Math.ceil(1500 / (historical.length * CARD)));
+      const CARD = 280; // largeur carte + gap (px), à garder aligné sur dates.css
+      const reps = Math.max(1, Math.ceil(2400 / (historical.length * CARD)));
       const makeGroup = (isCopy) => {
-        const ul = el('ul', '', 'history-group');
+        const ul = el('ul', '', 'archive-group');
         if (isCopy) ul.setAttribute('aria-hidden', 'true');
-        for (let r = 0; r < reps; r++) historical.forEach(x => ul.append(makeCard(x, isCopy || r > 0)));
+        for (let r = 0; r < reps; r++) {
+          historical.forEach(x => ul.append(buildCard(x, { past: true, dup: isCopy || r > 0 })));
+        }
         return ul;
       };
 
-      const track = el('div', '', 'history-track');
-      track.style.setProperty('--dur', Math.max(20, Math.round(historical.length * reps * CARD / 45)) + 's'); // ~45 px/s
+      const track = el('div', '', 'archive-track');
+      track.style.setProperty('--dur', Math.max(24, Math.round(historical.length * reps * CARD / 45)) + 's'); // ~45 px/s
       track.append(makeGroup(false), makeGroup(true));
       historyBox.append(track);
-      historyCount.textContent = `${historical.length} date${historical.length > 1 ? 's' : ''} passée${historical.length > 1 ? 's' : ''}`;
       historyWrap.hidden = false;
     }
   } catch (err) {

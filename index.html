@@ -34,6 +34,7 @@
 <link rel="preload" href="assets/fonts/Coolvetica-Rg-Cond.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="gallery.css">
+<link rel="stylesheet" href="dates.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -228,14 +229,21 @@
     <p><a href="#contact">Possibilité de s'adapter aux besoins spécifiques de certains événements ↴</a></p>
   </section>
 
-  <section class="stub reveal" id="dates">
+  <section class="stub reveal" id="dates" aria-labelledby="dates-title">
     <p class="tag">03 - Agenda</p>
-    <h2 class="chrome">Dates</h2>
-    <ul class="dates" id="dates-list"></ul>
-    <p id="dates-note">Chargement des dates…</p>
-    <div class="dates-history" id="dates-history" hidden>
-      <h3 class="history-title"><span>Historique</span><em id="history-count"></em></h3>
-      <div class="history-marquee" id="history-marquee"></div>
+    <h2 class="chrome" id="dates-title">Dates</h2>
+
+    <!-- En-tête de tableau purement visuel (affiché seulement s'il y a des dates à venir) -->
+    <div class="agenda-head" id="dates-head" aria-hidden="true" hidden>
+      <span></span><span>Date</span><span>Lieu</span><span>Horaires</span><span>Carte</span>
+    </div>
+    <ul class="agenda" id="dates-list"></ul>
+    <p class="agenda-note" id="dates-note" role="status">Chargement des dates…</p>
+
+    <!-- Historique : titre seul, puis bande de cartes cliquables en défilement continu -->
+    <div class="archive" id="dates-history" hidden>
+      <h3 class="archive-title">Historique</h3>
+      <div class="archive-marquee" id="history-marquee"></div>
     </div>
   </section>
 
