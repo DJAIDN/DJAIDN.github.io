@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-02T21:59:09.474Z",
+  "updated": "2026-11-07T15:34:57.192Z",
   "dates": [
     {
       "id": "camping-l-ocean-2026-08-05",
@@ -39,9 +39,9 @@
       "status": "confirmed"
     },
     {
-      "id": "open-deck-d3-2026-11-05",
+      "id": "d3-2026-11-05",
       "date": "2026-11-05",
-      "venue": "OPEN DECK D3",
+      "venue": "D3",
       "city": "Nantes",
       "time": "22:00",
       "duration": 360,
