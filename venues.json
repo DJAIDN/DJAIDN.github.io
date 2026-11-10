@@ -1,4 +1,61 @@
 {
   "version": 1,
-  "venues": {}
+  "venues": {
+    "australian-cafe|nantes": {
+      "name": "Australian Cafe",
+      "city": "Nantes",
+      "website": null,
+      "instagram": null,
+      "source": null,
+      "checked": "2026-11-10"
+    },
+    "camping-l-ocean|sjdm": {
+      "name": "Camping L’Ocean",
+      "city": "SJDM",
+      "website": "https://www.campinglocean.com/",
+      "instagram": null,
+      "source": "osm",
+      "checked": "2026-11-10"
+    },
+    "d3-x-mt2e|nantes": {
+      "name": "D3 X MT2E",
+      "city": "Nantes",
+      "website": null,
+      "instagram": null,
+      "source": null,
+      "checked": "2026-11-10"
+    },
+    "d3|nantes": {
+      "name": "D3",
+      "city": "Nantes",
+      "website": null,
+      "instagram": null,
+      "source": null,
+      "checked": "2026-11-10"
+    },
+    "la-dinguette|la-garnache": {
+      "name": "La Dinguette",
+      "city": "La Garnache",
+      "website": null,
+      "instagram": null,
+      "source": null,
+      "checked": "2026-11-10"
+    },
+    "maximo-club|nantes": {
+      "name": "Maximo Club",
+      "city": "Nantes",
+      "website": null,
+      "instagram": null,
+      "source": null,
+      "checked": "2026-11-10"
+    },
+    "wax-bar|nantes": {
+      "name": "WAX BAR",
+      "city": "Nantes",
+      "website": "https://www.waxbarnantes.com/",
+      "instagram": "https://www.instagram.com/wax_barnantes/",
+      "source": "osm",
+      "checked": "2026-11-10"
+    }
+  }
 }
