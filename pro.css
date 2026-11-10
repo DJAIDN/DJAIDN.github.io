@@ -80,7 +80,7 @@ a.media-card:active,.media-wall:active .mw-cell{transform:scale(.98)}
 .mw-cell img{transition:filter .35s,transform .7s var(--ease)}
 
 /* ---------- Contact : l'adresse en grand, soulignement qui se trace ---------- */
-#contact .mail{font:900 clamp(.95rem,3.6vw,2.6rem)/1.1 var(--display);overflow-wrap:anywhere;border:0;padding-bottom:8px;color:var(--pale);
+#contact .mail{font:900 clamp(1.15rem,5vw,3.6rem)/1.1 var(--display);overflow-wrap:anywhere;border:0;padding-bottom:8px;color:var(--pale);
   background:linear-gradient(var(--green),var(--green)) 0 100%/0 3px no-repeat,linear-gradient(rgba(255,179,214,.35),rgba(255,179,214,.35)) 0 100%/100% 1px no-repeat;
   transition:background-size .5s var(--ease),color .2s}
 @media (hover:hover){#contact .mail:hover{background-size:100% 3px,100% 1px;color:#fff}}
@@ -96,7 +96,7 @@ a.media-card:active,.media-wall:active .mw-cell{transform:scale(.98)}
 
 /* ---------- Pied de page : mot géant chromé ---------- */
 footer{position:relative;overflow:hidden;padding-top:36px}
-.foot-word{flex:0 0 100%;font:900 clamp(5rem,26vw,24rem)/.8 var(--display);letter-spacing:-.02em;margin:0 0 -.05em;background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9;user-select:none;pointer-events:none}
+.foot-word{flex:0 0 100%;font:900 clamp(5rem,26vw,24rem)/.8 var(--display);letter-spacing:0;text-align:center;margin:0 0 -.05em;background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9;user-select:none;pointer-events:none}
 
 @media (max-width:720px){
   #bio,#booking,#medias{min-height:0}
@@ -111,3 +111,61 @@ footer{position:relative;overflow:hidden;padding-top:36px}
 
 /* Logo du hero : l'image d'origine est violette, on la ramène vers le rose (réversible : supprimer cette ligne) */
 .hero-art{filter:hue-rotate(48deg) saturate(1.15)}
+
+.legal a{color:var(--pink);border-bottom:1px solid currentColor}
+
+/* =========================================================
+   Loader : deux volets qui s'ouvrent sur le mot AIDN
+   Le mot se remplit de bas en haut (transform uniquement),
+   le trait vert et le compteur suivent la même progression --p.
+   ========================================================= */
+#loader{position:fixed;inset:0;z-index:100;display:none}
+.loading #loader{display:block}
+.ld-panel{position:absolute;left:0;right:0;height:50%;overflow:hidden;background:var(--ink);will-change:transform;transition:transform .9s cubic-bezier(.76,0,.24,1)}
+.ld-top{top:0}
+.ld-bot{bottom:0}
+.ld-stage{position:absolute;left:0;right:0;height:200%;display:grid;place-items:center;padding:0 var(--pad)}
+.ld-top .ld-stage{top:0}
+.ld-bot .ld-stage{bottom:0}
+.ld-stage::before{content:"";position:absolute;inset:0;opacity:.14;background:radial-gradient(circle,var(--mid) 1.3px,transparent 1.6px) 0 0/14px 14px;-webkit-mask-image:radial-gradient(circle,#000,transparent 70%);mask-image:radial-gradient(circle,#000,transparent 70%)}
+.ld-word{position:relative;font:900 clamp(4.5rem,24vw,20rem)/.8 var(--display);text-align:center}
+.ld-out{display:block;color:transparent;-webkit-text-stroke:1px rgba(255,238,246,.4)}
+.ld-fill{position:absolute;inset:0;overflow:hidden;transform:translateY(calc((1 - var(--p,0)) * 100%))}
+.ld-fill>span{position:absolute;inset:0;transform:translateY(calc((var(--p,0) - 1) * 100%));background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent}
+#loader.done .ld-fill>span{background:none;color:var(--vivid)}
+.ld-line{position:absolute;left:0;right:0;top:calc(50% - 1px);height:2px;background:var(--green);transform:scaleX(var(--p,0));transform-origin:left}
+.ld-meta{position:absolute;font:700 .8rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mid)}
+.ld-tl,.ld-tr{top:calc(clamp(16px,3vw,32px) + env(safe-area-inset-top,0px))}
+.ld-br{bottom:calc(clamp(16px,3vw,32px) + env(safe-area-inset-bottom,0px));right:var(--pad)}
+.ld-tl{left:var(--pad)}
+.ld-tr{right:var(--pad)}
+.ld-n{position:absolute;left:var(--pad);bottom:calc(clamp(8px,2vw,24px) + env(safe-area-inset-bottom,0px));font:900 clamp(2.4rem,8vw,6rem)/1 var(--display);color:var(--pale);font-variant-numeric:tabular-nums}
+#loader.out{pointer-events:none}
+#loader.out .ld-top{transform:translateY(-100%)}
+#loader.out .ld-bot{transform:translateY(100%)}
+@media (prefers-reduced-motion:reduce){
+  .ld-panel{transition:opacity .3s}
+  #loader.out .ld-top,#loader.out .ld-bot{transform:none;opacity:0}
+}
+
+/* =========================================================
+   Dates : même langage que le reste (rose, vert, chrome)
+   La mécanique de dates.css (grille, inversion au survol) ne change pas.
+   ========================================================= */
+#dates{--d-silver:var(--mid);--d-focus:var(--green)}
+#dates ::selection{background:var(--green);color:#000}
+#dates h2.chrome{background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent}
+.agenda-head{border-bottom-color:var(--vivid)}
+.date-card{box-shadow:4px 4px 0 var(--vivid)}
+.dc-rail{background:repeating-linear-gradient(135deg,var(--vivid) 0 1px,transparent 1px 6px)}
+.dc-flag{background:var(--green);color:#000}
+.date-card.is-past{border-color:rgba(255,238,246,.6);box-shadow:4px 4px 0 rgba(255,46,147,.45)}
+.date-card.is-past .dc-rail{background:repeating-linear-gradient(135deg,rgba(255,46,147,.6) 0 1px,transparent 1px 6px)}
+.archive-title{background:var(--vivid);color:#000}
+#dates .agenda-note::before{color:var(--green)}
+@keyframes card-in{from{opacity:0;transform:translateY(14px)}}
+.reveal.in .agenda>li .date-card{animation:card-in .6s var(--ease) backwards;animation-delay:calc(var(--n,0) * 70ms + 150ms)}
+.agenda>li:nth-child(2) .date-card{--n:1}
+.agenda>li:nth-child(3) .date-card{--n:2}
+.agenda>li:nth-child(4) .date-card{--n:3}
+@media (prefers-reduced-motion:reduce){.reveal.in .agenda>li .date-card{animation:none}}

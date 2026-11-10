@@ -232,25 +232,32 @@ function initLoader() {
     return;
   }
 
-  const bar = el.querySelector('.ld-bar i');
-  const pct = el.querySelector('.ld-pct');
-  const MIN = 1600, start = performance.now();
+  const counters = el.querySelectorAll('.ld-n');
+  const MIN = 1400, start = performance.now();
   let loaded = document.readyState === 'complete';
   window.addEventListener('load', () => { loaded = true; });
 
+  const paint = p => {
+    el.style.setProperty('--p', p.toFixed(3));
+    const label = String(Math.round(p * 100)).padStart(3, '0');
+    counters.forEach(c => { c.textContent = label; });
+  };
+
   (function tick(now) {
     const t = Math.min((now - start) / MIN, 1);
-    const p = loaded ? t : Math.min(t, .9);
-    bar.style.transform = `scaleX(${p})`;
-    pct.textContent = Math.round(p * 100) + '%';
+    const eased = 1 - Math.pow(1 - t, 2);              // démarre vite, termine doucement
+    const p = loaded ? eased : Math.min(eased, .9);    // reste à 90 % tant que la page charge
+    paint(p);
     if (p < 1 && now - start < 5000) return requestAnimationFrame(tick);
 
-    el.classList.add('out');                           // lance l'animation de sortie
-    setTimeout(() => root.classList.add('ready'), 650); // le hero entre pendant la montée du rideau
+    paint(1);
+    el.classList.add('done');                           // le mot passe au rose
+    setTimeout(() => el.classList.add('out'), 220);     // les deux volets s'ouvrent
+    setTimeout(() => root.classList.add('ready'), 520); // le hero entre pendant l'ouverture
     setTimeout(() => {                                  // fin : on nettoie et on libère le scroll
       root.classList.remove('loading');
       el.remove();
-    }, 1250);
+    }, 1300);
     try { sessionStorage.setItem('aidn-seen', '1'); } catch (e) {}
   })(start);
 }

@@ -221,32 +221,8 @@ dialog label{display:flex;gap:10px;align-items:center;font-size:.9rem}
 @keyframes bio-spin{to{transform:rotate(360deg)}}
 .bio-photo figcaption{position:absolute;z-index:2;left:14px;bottom:-10px;background:var(--pale);color:var(--deep);font:400 1.3rem/1 var(--tag);letter-spacing:.02em;padding:5px 12px;transform:rotate(-3deg)}
 
-/* ---------- 14. Loader ---------- */
-#loader{--ld-w:clamp(150px,40vw,220px);position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:var(--ink) radial-gradient(ellipse at 50% 50%,rgba(255,46,147,.35),transparent 60%);transition:transform .85s cubic-bezier(.77,0,.18,1) .3s}
-.loading #loader{display:flex}
+/* ---------- 14. Loader : voir pro.css ---------- */
 html.loading{overflow:hidden}
-/* Sortie : le contenu zoome et s'efface, puis le rideau monte avec un bord papier déchiré */
-#loader.out{transform:translateY(-104%);pointer-events:none}
-#loader::after{content:"";position:absolute;left:0;right:0;top:100%;height:20px;background:var(--pale);clip-path:polygon(0 0,100% 0,100% 30%,94% 80%,88% 35%,82% 90%,76% 40%,70% 85%,64% 30%,58% 80%,52% 38%,46% 90%,40% 32%,34% 82%,28% 36%,22% 88%,16% 30%,10% 80%,5% 40%,0 70%)}
-.ld-halftone{position:absolute;inset:0;opacity:.16;background:radial-gradient(circle,var(--mid) 1.3px,transparent 1.6px) 0 0/14px 14px;-webkit-mask-image:radial-gradient(circle,#000,transparent 75%);mask-image:radial-gradient(circle,#000,transparent 75%)}
-.ld-logo{position:relative;width:var(--ld-w);transition:opacity .3s ease,transform .5s cubic-bezier(.5,0,.8,.3)}
-#loader.out .ld-logo{opacity:0;transform:scale(1.35)}
-.ld-logo img{width:100%;animation:ld-glitch 1.1s steps(1,end) infinite}
-/* Glitch RVB : le logo PNG est détouré, drop-shadow suit sa forme exacte */
-@keyframes ld-glitch{
-  0%,60%,100%{transform:none;filter:drop-shadow(0 0 14px rgba(255,46,147,.8))}
-  20%{transform:translate(-3px,1px);filter:drop-shadow(-4px 0 0 var(--pink)) drop-shadow(4px 0 0 var(--vivid))}
-  40%{transform:translate(2px,-1px);filter:drop-shadow(3px 0 0 var(--pink)) drop-shadow(-3px 0 0 var(--vivid))}
-  80%{transform:translate(-1px,0) skewX(-4deg);filter:drop-shadow(-3px 0 0 var(--mid)) drop-shadow(3px 0 0 var(--deep))}
-}
-.ld-star{position:absolute;width:30px;height:30px;color:var(--pink);animation:bio-spin 8s linear infinite}
-.ld-star.a{top:-16px;left:-12px}
-.ld-star.b{bottom:-14px;right:-10px;width:20px;height:20px;color:var(--vivid);animation-direction:reverse}
-/* Texte + barre accrochés sous le logo : le logo reste pile au centre de l'écran */
-.ld-foot{position:absolute;left:0;right:0;top:100%;display:grid;gap:6px}
-.ld-meta{display:flex;justify-content:space-between;font:700 .56rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mid)}
-.ld-bar{height:4px;border:1px solid rgba(255,179,214,.5);padding:1px}
-.ld-bar i{display:block;height:100%;background:var(--chrome);transform:scaleX(0);transform-origin:left;box-shadow:0 0 10px var(--vivid)}
 
 @media (max-width:720px){
   .nav nav{gap:8px}
@@ -258,8 +234,7 @@ html.loading{overflow:hidden}
   .bio-photo{max-width:320px;margin:0 auto}
 }
 @media (prefers-reduced-motion:reduce){
-  .ld-logo img,.ld-star,.bio-star,.eq i{animation:none}
-  #loader{transition:none}
+  .bio-star,.eq i{animation:none}
 }
 
 /* ---------- 15. Animations (transform / opacity uniquement = GPU, pas de reflow) ---------- */
@@ -291,8 +266,6 @@ html.loading{overflow:hidden}
   .ready .hero>:not(h1),.ready .hero-art{animation:none}
   .js .reveal>*{opacity:1;transform:none;transition:none}
   .js .reveal:not(.in) .bio-photo{transform:rotate(-2deg)}
-  #loader.out{transform:none;opacity:0}
-  #loader::after{display:none}
   .track.playing .t-play::after{animation:none}
 }
 
