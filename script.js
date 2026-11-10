@@ -297,21 +297,28 @@ function getHours(x) {
 }
 
 /* Lien d'une date, par ordre de priorité :
-   1. un champ « url » (http/https) sur la date dans dates.json ;
-   2. l'Instagram puis le site du lieu, trouvés automatiquement et rangés dans venues.json
-      (voir scripts/enrich-venues.mjs, lancé par GitHub Actions) ;
+   1. un champ « url » sur la date dans dates.json ;
+   2. le lien du lieu, rempli à la main dans venues.json (un lien par lieu, valable pour toutes ses dates) ;
    3. à défaut, la recherche Google Maps du lieu.
-   La clé du lieu doit rester identique à celle du script d'enrichissement. */
+   Dans venues.json : "Nom du lieu": "https://www.instagram.com/xxx/" (ou "@xxx", ou l'adresse d'un site).
+   Le nom est comparé sans tenir compte des majuscules, accents ni ponctuation. */
 const CITY_NAMES = { SJDM: 'Saint-Jean-de-Monts' };
 let VENUES = {};
 const slugKey = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-const isHttp = u => /^https?:\/\//i.test(String(u || ''));
+function cleanLink(v) {   // "@pseudo" -> Instagram ; "site.fr" -> https://site.fr ; autre chose que http(s) -> ignoré
+  let s = String(v || '').trim();
+  if (!s) return null;
+  if (/^@[\w.]{2,30}$/.test(s)) s = 'https://www.instagram.com/' + s.slice(1) + '/';
+  else if (!/^[a-z][a-z0-9+.-]*:/i.test(s)) s = 'https://' + s;
+  if (!/^https?:\/\//i.test(s)) return null;
+  return { url: s, label: /instagram\.com/i.test(s) ? 'Instagram' : 'Site' };
+}
 function venueLink(x) {
-  if (isHttp(x.url)) return { url: x.url, label: 'Site' };
-  const v = VENUES[slugKey(x.venue) + '|' + slugKey(x.city)] || {};
-  if (isHttp(v.instagram)) return { url: v.instagram, label: 'Instagram' };
-  if (isHttp(v.website)) return { url: v.website, label: 'Site' };
+  const own = cleanLink(x.url);
+  if (own) return own;
+  const known = VENUES[slugKey(x.venue)];
+  if (known) return known;
   const q = [x.venue, CITY_NAMES[x.city] || x.city].filter(Boolean).join(' ');
   return { url: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q), label: 'Carte' };
 }
@@ -398,9 +405,14 @@ async function initDates() {
     const res = await fetch('dates.json', { cache: 'no-cache' });
     if (!res.ok) throw new Error(res.status);
     const data = await res.json();
-    try {   // liens des lieux : facultatif, sans venues.json on retombe sur Google Maps
+    try {   // liens des lieux (venues.json) : facultatif, sans lui on retombe sur Google Maps
       const vr = await fetch('venues.json', { cache: 'no-cache' });
-      if (vr.ok) VENUES = (await vr.json()).venues || {};
+      if (vr.ok) {
+        for (const [name, v] of Object.entries(await vr.json())) {
+          const link = cleanLink(v);
+          if (link) VENUES[slugKey(name)] = link;
+        }
+      }
     } catch (e) { /* ignoré */ }
     const t = new Date();
     const today = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
