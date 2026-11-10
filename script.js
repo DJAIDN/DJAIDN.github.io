@@ -296,14 +296,24 @@ function getHours(x) {
   return { label: '', length: '' };
 }
 
-/* Lien d'une date : recherche Google Maps du lieu (aucun champ à ajouter dans dates.json).
-   Si une date porte un jour un champ « url » en http(s), il est prioritaire.
-   CITY_NAMES : abréviations -> nom complet, uniquement pour la recherche. */
+/* Lien d'une date, par ordre de priorité :
+   1. un champ « url » (http/https) sur la date dans dates.json ;
+   2. l'Instagram puis le site du lieu, trouvés automatiquement et rangés dans venues.json
+      (voir scripts/enrich-venues.mjs, lancé par GitHub Actions) ;
+   3. à défaut, la recherche Google Maps du lieu.
+   La clé du lieu doit rester identique à celle du script d'enrichissement. */
 const CITY_NAMES = { SJDM: 'Saint-Jean-de-Monts' };
-function venueUrl(x) {
-  if (/^https?:\/\//i.test(String(x.url || ''))) return x.url;
+let VENUES = {};
+const slugKey = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+const isHttp = u => /^https?:\/\//i.test(String(u || ''));
+function venueLink(x) {
+  if (isHttp(x.url)) return { url: x.url, label: 'Site' };
+  const v = VENUES[slugKey(x.venue) + '|' + slugKey(x.city)] || {};
+  if (isHttp(v.instagram)) return { url: v.instagram, label: 'Instagram' };
+  if (isHttp(v.website)) return { url: v.website, label: 'Site' };
   const q = [x.venue, CITY_NAMES[x.city] || x.city].filter(Boolean).join(' ');
-  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+  return { url: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q), label: 'Carte' };
 }
 
 async function initDates() {
@@ -329,7 +339,8 @@ async function initDates() {
     const venueName = String(x.venue || '');
 
     const card = el('a', '', 'date-card' + (next ? ' is-next' : '') + (past ? ' is-past' : ''));
-    card.href = venueUrl(x);
+    const link = venueLink(x);
+    card.href = link.url;
     card.target = '_blank';
     card.rel = 'noopener noreferrer';
     if (dup) card.tabIndex = -1;
@@ -357,7 +368,7 @@ async function initDates() {
 
     const arrow = el('i', '↗');
     arrow.setAttribute('aria-hidden', 'true');
-    const label = el('span', 'Carte', 'dc-go-l');
+    const label = el('span', link.label, 'dc-go-l');
     label.append(' ', arrow);
     const go = el('span', '', 'dc-go');
     go.append(label);
@@ -387,6 +398,10 @@ async function initDates() {
     const res = await fetch('dates.json', { cache: 'no-cache' });
     if (!res.ok) throw new Error(res.status);
     const data = await res.json();
+    try {   // liens des lieux : facultatif, sans venues.json on retombe sur Google Maps
+      const vr = await fetch('venues.json', { cache: 'no-cache' });
+      if (vr.ok) VENUES = (await vr.json()).venues || {};
+    } catch (e) { /* ignoré */ }
     const t = new Date();
     const today = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
 
