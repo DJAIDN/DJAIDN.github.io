@@ -1,0 +1,113 @@
+/* =========================================================
+   pro.css — AIDN · couche « finition pro »
+   À charger APRÈS style.css, gallery.css et dates.css.
+   Principes : courbes ease-out fortes, uniquement transform/opacity,
+   survols réservés aux souris, appui = scale(.97), ombres pleines
+   (aucun halo flou), plus aucune rotation au survol.
+   La section Dates (dates.css) n'est pas touchée.
+   ========================================================= */
+:root{--ease:cubic-bezier(.23,1,.32,1)}
+html{scroll-padding-top:84px}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* Lien d'évitement (clavier) */
+.skip{position:fixed;left:12px;top:-64px;z-index:300;background:#fff;color:#000;padding:12px 18px;font:700 .85rem var(--mono);text-transform:uppercase;transition:top .2s var(--ease)}
+.skip:focus{top:calc(10px + env(safe-area-inset-top,0px))}
+
+/* ---------- En-têtes de section : filet qui se trace ---------- */
+.stub>.tag{display:flex;align-items:center;gap:16px;width:100%}
+.stub>.tag::after{content:"";flex:1;height:1px;background:rgba(255,179,214,.28)}
+.js .reveal>.tag::after{transform:scaleX(0);transform-origin:left;transition:transform 1s var(--ease) .2s}
+.js .reveal.in>.tag::after{transform:none}
+#bio,#booking,#medias{min-height:min(calc(100svh - 80px),880px);justify-content:center}
+#contact{min-height:min(70svh,640px);justify-content:center}
+
+/* Apparition : plus courte, courbe forte, cascade serrée */
+.js .reveal>*{transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease);transition-delay:calc(var(--i,0)*70ms)}
+
+/* ---------- Nav : sobre, lien actif souligné ---------- */
+.nav{background:rgba(7,7,8,.84)}
+.nav a.nav-sec{position:relative;padding:6px 0}
+.nav a.nav-sec::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+.nav a.nav-sec.is-active{color:#fff}
+.nav a.nav-sec.is-active::after{transform:none}
+@media (hover:hover){.nav a.nav-sec:hover::after{transform:none}}
+.nav a.nav-gal:hover,.nav button.nav-gal:hover{transform:none}
+.nav a.pill,.nav a.pill:hover,.nav a.nav-music:hover{box-shadow:none}
+.nav a.nav-music[aria-current]{box-shadow:0 0 0 2px var(--vivid)}
+
+/* ---------- Hero : halo qui suit la souris + hiérarchie du texte ---------- */
+.hero{background:radial-gradient(ellipse 70% 55% at 50% 40%,rgba(255,46,147,.2),transparent 65%)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s var(--ease);background:radial-gradient(520px circle at var(--mx,50%) var(--my,40%),rgba(255,238,246,.09),transparent 60%)}
+.hero.lit::after{opacity:1}
+.hero-sub{font-size:clamp(1.05rem,1.6vw,1.25rem);line-height:1.6;color:#d9cfd4}
+.hero .tag{color:var(--pale)}
+.door{border-radius:0;border-color:rgba(255,238,246,.35);background:rgba(19,13,17,.85);transition:transform .2s var(--ease),box-shadow .2s var(--ease),background .2s,border-color .2s}
+@media (hover:hover){
+  .hero .door:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--green);background:var(--surface);border-color:#fff}
+}
+.hero .door:active{transform:scale(.98);box-shadow:none}
+
+/* ---------- Boutons ---------- */
+.btn{display:inline-flex;align-items:center;gap:12px;min-height:52px;padding:0 26px;background:var(--vivid);color:#fff;border:1px solid var(--vivid);font:700 .9rem var(--mono);letter-spacing:.08em;text-transform:uppercase;transition:transform .16s var(--ease),box-shadow .2s var(--ease),background .2s,color .2s,border-color .2s}
+@media (hover:hover){.btn:hover{background:#fff;color:var(--ink);border-color:#fff;box-shadow:5px 5px 0 var(--green);transform:translate(-2px,-2px)}}
+.btn:active{transform:scale(.97);box-shadow:none}
+
+/* ---------- Bio : texte en paliers, photo qui s'anime sans pencher ---------- */
+.bio-photo{transform:rotate(-1deg);filter:drop-shadow(8px 8px 0 rgba(255,46,147,.6))}
+.bio-frame img{transition:transform .7s var(--ease)}
+@media (hover:hover){.bio-photo:hover .bio-frame img{transform:scale(1.03)}}
+#bio .bio-text p:first-child{font-size:clamp(1.15rem,2vw,1.4rem);line-height:1.55;color:var(--pale)}
+.wh{opacity:.25;transition:opacity .25s linear}
+.wh.on{opacity:1}
+
+/* ---------- Booking : appel à l'action net + rider en fiche technique ---------- */
+.rider{border-radius:0;background:var(--surface);border-color:rgba(255,238,246,.28)}
+.rider summary{display:flex;justify-content:space-between;align-items:center;list-style:none;min-height:44px}
+.rider summary::-webkit-details-marker{display:none}
+.rider summary::after{content:"+";font:400 1.8rem/1 var(--mono);color:var(--pink);transition:transform .25s var(--ease)}
+.rider[open] summary::after{transform:rotate(45deg)}
+.rider li{margin-bottom:6px}
+
+/* ---------- Médias : cartes qui se soulèvent, mur sans rotation ---------- */
+.media-card{border-radius:0;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s}
+@media (hover:hover){
+  a.media-card:hover{transform:translate(-3px,-3px);border-color:#fff;box-shadow:6px 6px 0 var(--green)}
+  .media-wall:hover .mw-cell:nth-child(odd),.media-wall:hover .mw-cell:nth-child(even){transform:none}
+  .media-wall:hover .mw-cell img{transform:scale(1.03)}
+}
+a.media-card:active,.media-wall:active .mw-cell{transform:scale(.98)}
+.mw-cell img{transition:filter .35s,transform .7s var(--ease)}
+
+/* ---------- Contact : l'adresse en grand, soulignement qui se trace ---------- */
+#contact .mail{font:900 clamp(.95rem,3.6vw,2.6rem)/1.1 var(--display);overflow-wrap:anywhere;border:0;padding-bottom:8px;color:var(--pale);
+  background:linear-gradient(var(--green),var(--green)) 0 100%/0 3px no-repeat,linear-gradient(rgba(255,179,214,.35),rgba(255,179,214,.35)) 0 100%/100% 1px no-repeat;
+  transition:background-size .5s var(--ease),color .2s}
+@media (hover:hover){#contact .mail:hover{background-size:100% 3px,100% 1px;color:#fff}}
+.socials a{min-height:60px;transition:border-color .2s}
+.socials a span{transition:transform .3s var(--ease)}
+@media (hover:hover){.socials a:hover{border-color:var(--vivid)}.socials a:hover span{transform:translateX(-6px)}}
+
+/* ---------- Page Musique : lignes de titres ---------- */
+.track{transition:background .2s}
+@media (hover:hover){.track:hover{background:rgba(255,238,246,.04)}}
+.t-play{transition:transform .16s var(--ease),box-shadow .2s,background .2s}
+.t-play:active{transform:scale(.94)}
+
+/* ---------- Pied de page : mot géant chromé ---------- */
+footer{position:relative;overflow:hidden;padding-top:36px}
+.foot-word{flex:0 0 100%;font:900 clamp(5rem,26vw,24rem)/.8 var(--display);letter-spacing:-.02em;margin:0 0 -.05em;background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9;user-select:none;pointer-events:none}
+
+@media (max-width:720px){
+  #bio,#booking,#medias{min-height:0}
+  .btn{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .wh{opacity:1;transition:none}
+  .hero::after{display:none}
+  .js .reveal>.tag::after{transform:none;transition:none}
+  .btn,.door,.media-card,.t-play,.nav a.nav-sec::after{transition:none}
+}
+
+/* Logo du hero : l'image d'origine est violette, on la ramène vers le rose (réversible : supprimer cette ligne) */
+.hero-art{filter:hue-rotate(48deg) saturate(1.15)}
