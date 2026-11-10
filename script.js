@@ -429,7 +429,7 @@ async function initDates() {
     if (head) head.hidden = !upcoming.length;
 
     injectEventSchema(upcoming);
-    note.textContent = upcoming.length ? "D'autres dates arrivent." : 'Aucune date annoncée pour le moment.';
+    note.textContent = upcoming.length ? "D'autres dates sont à venir" : 'Aucune date annoncée pour le moment.';
 
     // Historique : bande en défilement continu, aucune donnée chiffrée affichée
     if (historical.length) {
