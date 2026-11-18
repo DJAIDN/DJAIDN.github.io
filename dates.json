@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-09T17:12:27.368Z",
+  "updated": "2026-11-18T09:06:22.318Z",
   "dates": [
     {
       "id": "camping-l-ocean-2026-08-05",
@@ -54,6 +54,15 @@
       "city": "Nantes",
       "time": "22:00",
       "duration": 360,
+      "status": "confirmed"
+    },
+    {
+      "id": "australian-cafe-2026-11-19",
+      "date": "2026-11-19",
+      "venue": "Australian Cafe",
+      "city": "Nantes",
+      "time": "22:00",
+      "duration": 60,
       "status": "confirmed"
     },
     {
