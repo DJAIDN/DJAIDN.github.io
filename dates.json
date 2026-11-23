@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-18T09:06:22.318Z",
+  "updated": "2026-11-23T07:50:20.509Z",
   "dates": [
     {
       "id": "camping-l-ocean-2026-08-05",
@@ -63,15 +63,6 @@
       "city": "Nantes",
       "time": "22:00",
       "duration": 60,
-      "status": "confirmed"
-    },
-    {
-      "id": "la-dinguette-2026-12-31",
-      "date": "2026-12-31",
-      "venue": "La Dinguette",
-      "city": "La Garnache",
-      "time": null,
-      "duration": 120,
       "status": "confirmed"
     }
   ]
