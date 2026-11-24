@@ -1,0 +1,45 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "organic-clip-path",
+        "value": "*",
+        "files": [
+          "index.html",
+          "musique.html"
+        ],
+        "createdAt": "2026-11-24T09:05:28.728Z",
+        "reason": "Agent: torn-paper edges (genre ticker, Bio photo frame, 'Déjà joué ici' ribbon) are the site's established Y2K grunge motif"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-24T09:05:28.868Z",
+        "reason": "Agent: the genre ticker is a core brand element of the homepage (paper strip under the hero), pauses offscreen and under reduced motion"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-24T09:05:29.015Z",
+        "reason": "Agent: the only hit is the genre ticker, which must run edge to edge; its text is never static against an edge"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "musique.html"
+        ],
+        "createdAt": "2026-11-24T09:06:02.937Z",
+        "reason": "Agent: static CSS hit from shared style.css; musique.html has no ticker markup"
+      }
+    ]
+  }
+}

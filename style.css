@@ -93,7 +93,7 @@ a{color:inherit;text-decoration:none}
 .door .k{font:700 .7rem var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--pink)}
 .door strong{font:400 1.7rem/1.05 var(--cond)}
 .door em{font:400 .76rem var(--mono);font-style:normal;color:#bdb2b8}
-.door:hover{transform:translateY(-4px) rotate(-.6deg);box-shadow:0 0 34px rgba(255,46,147,.6);background:var(--deep)}
+.door:hover{transform:translateY(-4px) rotate(-.6deg);background:var(--deep)}
 .door-fan{border-color:var(--vivid)}
 
 /* ---------- 5. Bandeau « papier » aux bords déchirés + défilement ---------- */
@@ -162,7 +162,7 @@ footer a{color:var(--mid)}
 /* ---------- 10. Lecteur audio ---------- */
 .track{display:grid;grid-template-columns:48px 1fr auto;grid-template-areas:"p i d" "s s t";gap:8px 16px;align-items:center;padding:18px 0;border-bottom:1px solid rgba(255,238,246,.12)}
 .t-play{grid-area:p;width:48px;height:48px;border-radius:50%;border:1px solid var(--vivid);background:var(--deep);color:#fff;cursor:pointer;transition:box-shadow .2s}
-.t-play:hover,.track.playing .t-play{box-shadow:0 0 22px rgba(255,46,147,.7);background:var(--vivid)}
+.t-play:hover,.track.playing .t-play{background:var(--vivid);color:var(--ink)}
 .t-info{grid-area:i;display:flex;flex-direction:column;gap:6px}
 .t-info strong{font:400 1.5rem/1.1 var(--cond)}
 .t-seek{grid-area:s;width:100%;accent-color:var(--vivid)}
@@ -173,12 +173,12 @@ footer a{color:var(--mid)}
 .legal strong,.legal b{color:var(--pale)}
 dialog{margin:auto;max-width:min(92vw,440px);padding:26px;border:1px solid var(--vivid);background:var(--surface);color:var(--pale)}
 dialog::backdrop{background:rgba(7,7,8,.8);backdrop-filter:blur(4px)}
-dialog h3{font:400 1.7rem var(--cond);margin-bottom:10px}
+dialog h2{font:400 1.7rem var(--cond);margin-bottom:10px}
 dialog p{color:#bdb2b8;margin-bottom:14px}
 dialog label{display:flex;gap:10px;align-items:center;font-size:.9rem}
 .dlg-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
 .dlg-actions button{font:700 .76rem var(--mono);text-transform:uppercase;padding:10px 16px;border:1px solid var(--vivid);background:none;color:var(--pale);cursor:pointer}
-#dlGo{background:var(--vivid)}
+#dlGo{background:var(--vivid);color:var(--ink)}
 #dlGo:disabled{opacity:.35;cursor:not-allowed}
 
 /* ---------- 11. Bio + page Musique ---------- */
@@ -197,15 +197,15 @@ dialog label{display:flex;gap:10px;align-items:center;font-size:.9rem}
 .nav a.nav-gal:hover,.nav button.nav-gal:hover{background:var(--deep);color:#fff;transform:rotate(-2deg)}
 /* Musique = pastille chrome avec mini égaliseur (ouvre une autre page) */
 .nav a.nav-music{display:inline-flex;align-items:center;color:var(--ink);font-weight:700;background:var(--chrome);background-size:200% 100%;border-radius:999px;padding:8px 16px;transition:box-shadow .25s,background-position .4s}
-.nav a.nav-music:hover{color:var(--ink);background-position:100% 0;box-shadow:0 0 22px rgba(255,122,184,.8)}
-.nav a.nav-music[aria-current]{box-shadow:0 0 0 2px var(--vivid)}
+.nav a.nav-music:hover{color:var(--ink);background-position:100% 0}
+.nav a.nav-music[aria-current]{outline:2px solid var(--vivid);outline-offset:0}
 .eq{display:inline-flex;align-items:flex-end;gap:2px;height:12px;margin-right:8px}
 .eq i{width:2px;height:100%;background:currentColor;transform-origin:bottom;animation:eq 1s ease-in-out infinite}
 .eq i:nth-child(2){animation-delay:.2s}.eq i:nth-child(3){animation-delay:.4s}
 @keyframes eq{50%{transform:scaleY(.3)}}
 /* Contact = bouton plein néon (l'action principale) */
-.nav a.pill{color:#fff;background:var(--vivid);border:0;padding:9px 18px;box-shadow:0 0 18px rgba(255,46,147,.65);transition:background .2s,box-shadow .2s,color .2s}
-.nav a.pill:hover{background:var(--pink);color:var(--ink);box-shadow:0 0 26px rgba(255,179,214,.8)}
+.nav a.pill{color:var(--ink);background:var(--vivid);border:0;padding:9px 18px;transition:background .2s,box-shadow .2s,color .2s}
+.nav a.pill:hover{background:var(--pink);color:var(--ink);}
 
 /* ---------- 13. Bio : photo « sticker » Y2K ---------- */
 .bio-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,64px);align-items:center;width:100%;margin-top:12px}
@@ -226,7 +226,7 @@ html.loading{overflow:hidden}
 
 @media (max-width:720px){
   .nav nav{gap:8px}
-  .nav a:not(.nav-logo),.nav-btn{font-size:.64rem}
+  .nav a:not(.nav-logo),.nav-btn{font-size:.72rem}
   .nav a.nav-gal,.nav button.nav-gal{padding:6px 8px}
   .nav a.nav-music{padding:6px 10px}
   .nav a.pill{padding:7px 12px}
@@ -279,32 +279,6 @@ html.loading{overflow:hidden}
 .dates .d-right{display:flex;flex-direction:column;align-items:flex-start;gap:8px;flex:none;order:-1}
 .badge.spray{font:400 1.3rem/1 var(--tag);letter-spacing:.02em;text-transform:none;color:var(--pink);border:0;padding:0;white-space:nowrap;transform:rotate(-4deg);transform-origin:left center}
 
-/* Historique : dates passées, centrées, en défilement continu (même principe que le bandeau papier) */
-.dates li:last-child{border-bottom:0}
-.dates-history{width:100%;margin-top:clamp(28px,5vw,52px);display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}
-.dates-history[hidden]{display:none}
-.history-title{display:flex;flex-direction:column;align-items:center;gap:8px}
-.history-title span{font:900 clamp(1.8rem,5vw,2.8rem)/1 var(--display);letter-spacing:.02em;text-transform:uppercase;color:var(--pale)}
-.history-title em{font:700 .95rem var(--mono);font-style:normal;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
-.history-marquee{width:100%;overflow:hidden;padding:10px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
-.history-track{display:flex;width:max-content;animation:history-scroll var(--dur,36s) linear infinite}
-.history-marquee:hover .history-track{animation-play-state:paused}
-.history-group{display:flex;gap:16px;padding-right:16px;list-style:none}
-@keyframes history-scroll{to{transform:translateX(-50%)}}
-.history-card{flex:none;width:236px;display:flex;flex-direction:column;gap:6px;padding:18px 20px;text-align:left;border:1px solid rgba(255,179,214,.3);border-radius:4px;background:var(--surface);transition:border-color .25s,box-shadow .25s}
-.history-card:nth-child(odd){transform:rotate(-.8deg)}
-.history-card:nth-child(even){transform:rotate(.8deg)}
-.history-card:hover{border-color:var(--vivid);box-shadow:0 0 22px rgba(255,46,147,.35)}
-.history-card time{font:400 .78rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mid)}
-.history-card strong{font:400 1.6rem/1.05 var(--cond);color:var(--pale)}
-.history-card span{font:400 .8rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#bdb2b8}
-@media (max-width:720px){.history-card{width:200px}}
-@media (prefers-reduced-motion:reduce){
-  .history-marquee{-webkit-mask-image:none;mask-image:none}
-  .history-track{animation:none;width:auto;justify-content:center}
-  .history-group{flex-wrap:wrap;justify-content:center;padding-right:0}
-  .history-group[aria-hidden="true"],.h-dup{display:none}
-}
 
 @media (max-width:720px){
   .dates li{grid-template-columns:1fr;justify-items:center;text-align:center;gap:12px}
@@ -331,7 +305,7 @@ html.loading{overflow:hidden}
 .stub p:not(.tag){font-size:1.05rem;line-height:1.7}
 .socials a{font-size:1rem;padding:20px 0}
 footer{font-size:.8rem;color:#a89da3}
-@media (max-width:720px){.nav a:not(.nav-logo),.nav-btn{font-size:.68rem}}
+@media (max-width:720px){.nav a:not(.nav-logo),.nav-btn{font-size:.72rem}}
 
 /* ---------- 18. Médias ---------- */
 .media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;width:100%;margin-top:8px}
@@ -340,7 +314,7 @@ footer{font-size:.8rem;color:#a89da3}
 .media-card strong{font:400 2rem/1 var(--cond);color:var(--pale)}
 .media-card p{flex:1;font-size:.95rem !important;color:#bdb2b8}
 .media-card .go{font:700 .85rem var(--mono);color:var(--pale)}
-a.media-card:hover{transform:translateY(-4px) rotate(-.5deg);border-color:var(--vivid);box-shadow:0 0 28px rgba(255,46,147,.45)}
+a.media-card:hover{transform:translateY(-4px) rotate(-.5deg);border-color:var(--vivid)}
 .media-card.soon{border-style:dashed}
 .media-card.soon .go{color:var(--mid)}
 .media-wall{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;margin:8px 0 22px;padding:0;border:0;background:none;cursor:pointer}
@@ -357,4 +331,4 @@ a.media-card:hover{transform:translateY(-4px) rotate(-.5deg);border-color:var(--
   100%{clip-path:polygon(0 -4%,10% -10%,20% -5%,30% -11%,40% -4%,50% -9%,60% -5%,70% -11%,80% -4%,90% -9%,100% -5%,100% 100%,0 100%);filter:saturate(.85)}
 }
 @media (prefers-reduced-motion:reduce){.mw-next{animation:none}}
-.media-wall span{position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);white-space:nowrap;background:var(--vivid);color:#fff;font:700 .85rem var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:12px 22px;border-radius:999px;box-shadow:0 0 22px rgba(255,46,147,.6)}
+.media-wall span{position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);white-space:nowrap;background:var(--vivid);color:var(--ink);font:700 .85rem var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:12px 22px;border-radius:999px;box-shadow:0 8px 20px -8px rgba(0,0,0,.85)}

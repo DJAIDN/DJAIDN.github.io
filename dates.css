@@ -1,36 +1,44 @@
 /* =========================================================
-   dates.css — Section « Dates » : agenda Y2K brut
-   Noir · blanc pur · gris chrome. Le bandeau « Prochaine date » est en
-   métal brossé (bandes à arêtes nettes) ; l'anneau de focus clavier est blanc.
-   Aucun border-radius, aucun flou, aucun dégradé doux : bordures
-   1px franches, ombres pleines (blur 0), hachures à arêtes nettes.
-   Les changements d'état sont instantanés (aucune transition).
+   dates.css — Section « Dates » : Y2K chrome, brut et usé
+   Noir · blanc pur · chrome (métal brossé à bandes nettes). Aucun halo lumineux :
+   l'éclat vient du métal (reflet qui balaie les lettres), le côté crade vient de la
+   texture (grain d'encre sur les lettres, trame de points, ruban de papier déchiré).
+   Les lieux passent avant les dates : le nom du lieu est l'élément le plus gros.
+   Rose et vert de la charte : en touches minuscules uniquement.
    À charger APRÈS style.css.
    ========================================================= */
 
 #dates{
   --d-silver:#c9c9cf;
-  --d-focus:#fff;
-  /* rail · date · lieu · horaires · carte (partagé par l'en-tête et les cartes) */
+  --d-dim:#9a9aa3;
+  --d-wire:#5c5c64;
+  /* métal brossé : bandes à arêtes nettes (horizontal / vertical) */
+  --metal-h:linear-gradient(180deg,#f4f4f7 0 18%,#fff 18% 30%,#a6a6af 30% 58%,#d2d2d9 58% 82%,#7a7a83 82% 100%);
+  --metal-v:linear-gradient(90deg,#7a7a83 0 16%,#e4e4ea 16% 38%,#fff 38% 50%,#a6a6af 50% 76%,#5c5c64 76% 100%);
+  /* chrome des lettres : reflet large, déplacé au moment où le lieu s'allume */
+  --chrome-type:linear-gradient(100deg,#fff 0%,#fff 22%,#9b9ba4 34%,#f4f4f7 44%,#6f6f78 56%,#e8e8ee 66%,#fff 78%,#b9b9c1 90%,#fff 100%);
+  /* grain d'encre : taches noires posées sur les lettres (bruit SVG, aucun fichier en plus) */
+  --grit:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .03 0 0 0 0 .03 0 0 0 0 .03 0 0 0 3.4 -1.85'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --halftone:radial-gradient(circle,#fff 1px,transparent 1.4px) 0 0/8px 8px;
+  /* rail · date · lieu · horaires · lien (partagé par l'en-tête et les cartes) */
   --cols:44px 148px minmax(0,1fr) 200px 150px;
 }
 #dates ::selection{background:#fff;color:#000}
 #dates .tag{color:var(--d-silver)}
-#dates h2.chrome{background:none;color:#fff}
 
 /* Texte réservé aux lecteurs d'écran */
 .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-/* ---------- En-tête de tableau (décoratif, masqué sur mobile) ---------- */
+/* =========================================================
+   1. DATES À VENIR : tableau brut noir / blanc, plaque chrome pour la prochaine
+   ========================================================= */
 .agenda-head{display:grid;grid-template-columns:var(--cols);width:100%;padding:0 1px 8px;border-bottom:1px solid #fff}
 .agenda-head[hidden]{display:none}
 .agenda-head>span{padding:0 22px;font:700 .8rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--d-silver)}
 
-/* ---------- Liste des dates à venir ---------- */
-.agenda{list-style:none;display:grid;gap:22px;width:100%}
+.agenda{list-style:none;display:grid;gap:18px;width:100%}
 .agenda:empty{display:none}
 
-/* ---------- Carte = un seul <a> cliquable de bout en bout ---------- */
 .date-card{
   --bg:#000;--fg:#fff;--dim:#a8a8b0;--ln:#fff;
   position:relative;display:grid;
@@ -38,43 +46,31 @@
   grid-template-areas:"rail date venue hours go";
   min-height:140px;
   background:var(--bg);color:var(--fg);
-  border:1px solid #fff;box-shadow:4px 4px 0 #fff;
-  cursor:crosshair;
+  border:1px solid #fff;
+  box-shadow:0 10px 24px -14px rgba(0,0,0,.9);
 }
-
-/* Rail de gauche : hachures au repos, plaque de métal brossé pour la prochaine date */
-.dc-rail{
-  grid-area:rail;display:grid;place-items:center;overflow:hidden;
-  background:repeating-linear-gradient(135deg,var(--dim) 0 1px,transparent 1px 6px);
-}
+.dc-rail{grid-area:rail;display:grid;place-items:center;overflow:hidden;background:repeating-linear-gradient(135deg,var(--dim) 0 1px,transparent 1px 6px)}
 .dc-flag{
-  --dir:90deg; /* bandes le long du rail vertical (desktop) */
-  background:linear-gradient(var(--dir),#e4e4ea 0 24%,#fff 24% 38%,#a6a6af 38% 66%,#d2d2d9 66% 100%);
-  color:#000;padding:12px 0;
+  background:var(--metal-v);color:#000;padding:12px 0;
   font:700 .72rem var(--mono);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
   writing-mode:vertical-rl;transform:rotate(180deg);
 }
 
-/* Cellules : séparées par des filets 1px, comme un tableau de données */
-.dc-date,.dc-venue,.dc-hours,.dc-go{
-  display:flex;flex-direction:column;justify-content:center;gap:6px;
-  padding:18px 22px;border-left:1px solid var(--ln);
-}
+.dc-date,.dc-venue,.dc-hours,.dc-go{display:flex;flex-direction:column;justify-content:center;gap:6px;padding:18px 22px;border-left:1px solid var(--ln)}
 .dc-date{grid-area:date;align-items:flex-start}
-.dc-date b{font:900 clamp(2.3rem,4vw,2.9rem)/.9 var(--display)}
-.dc-date span,.dc-city,.dc-hours span,.dc-pending{
-  font:700 .8rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);
-}
+.dc-date b{font:900 1.6rem/.9 var(--display)}
+.dc-date span,.dc-city,.dc-hours span,.dc-pending{font:700 .8rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
 .dc-date span{white-space:nowrap}
 
+/* Le lieu est la star de la carte */
 .dc-venue{grid-area:venue;min-width:0}
 .dc-name{
   display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
-  font:400 clamp(2rem,4.2vw,2.8rem)/1.05 var(--cond);text-transform:uppercase;
+  font:400 clamp(2.4rem,5vw,3.6rem)/1 var(--cond);text-transform:uppercase;
 }
 .date-card .dc-name{color:inherit} /* bat « .stub strong » de style.css */
 .dc-marq{display:inline}
-.dc-marq>span+span{display:none} /* la copie sert uniquement à la boucle du marquee */
+.dc-marq>span+span{display:none}
 
 .dc-hours{grid-area:hours}
 .dc-hours b{font:700 1.2rem/1.1 var(--mono);white-space:nowrap}
@@ -83,99 +79,205 @@
 .dc-go{grid-area:go;font:700 .95rem var(--mono);letter-spacing:.12em;text-transform:uppercase}
 .dc-go i{display:inline-block;font-style:normal}
 
-/* ---------- Carte d'historique : version compacte, verticale, pour la bande ---------- */
-.date-card.is-past{
-  --dim:#9a9aa3;
-  flex:none;width:260px;min-height:0;
-  grid-template-columns:minmax(0,1fr);
-  grid-template-areas:"rail" "date" "venue" "go";
-  border-color:#b4b4bc;box-shadow:4px 4px 0 #6f6f78;
-}
-.date-card.is-past .dc-rail{min-height:12px}
-.date-card.is-past>:not(.dc-rail){border-left:0;border-top:1px solid var(--ln);padding:12px 16px}
-.date-card.is-past .dc-date{flex-direction:row;justify-content:flex-start;align-items:baseline;gap:12px}
-.date-card.is-past .dc-date b{font-size:2rem}
-.date-card.is-past .dc-name{font-size:1.9rem}
-.date-card.is-past .dc-go{flex-direction:row;justify-content:flex-start;align-items:center;min-height:48px}
-
-/* ---------- Survol / focus clavier / appui : inversion stricte + effet « touche enfoncée » ---------- */
-.date-card:focus-visible,.date-card:active{
-  --bg:#fff;--fg:#000;--dim:#3d3d44;--ln:#000;
-  transform:translate(4px,4px);box-shadow:0 0 0 #fff;
-}
-.date-card:focus-visible{outline:3px solid var(--d-focus);outline-offset:4px}
+/* Survol / clavier / appui : inversion stricte noir -> blanc */
+.date-card:focus-visible,.date-card:active{--bg:#fff;--fg:#000;--dim:#3d3d44;--ln:#000}
+.date-card:focus-visible{outline:3px solid #fff;outline-offset:4px}
 .date-card:focus-visible .dc-go i,.date-card:active .dc-go i{transform:translate(3px,-3px)}
 @media (hover:hover){
-  .date-card:hover{
-    --bg:#fff;--fg:#000;--dim:#3d3d44;--ln:#000;
-    transform:translate(4px,4px);box-shadow:0 0 0 #fff;
-  }
+  .date-card:hover{--bg:#fff;--fg:#000;--dim:#3d3d44;--ln:#000}
   .date-card:hover .dc-go i{transform:translate(3px,-3px)}
 }
 
-/* Marquee du nom du lieu (desktop, si le mouvement est autorisé). La piste = nom /// nom ///
-   et se décale de -50% par paliers (steps) : défilement « afficheur LED » plutôt que fluide. */
 @keyframes dc-marq{to{transform:translateX(-50%)}}
 @media (min-width:861px) and (prefers-reduced-motion:no-preference){
   .date-card:hover .dc-name,.date-card:focus-visible .dc-name{text-overflow:clip}
-  .date-card:hover .dc-marq,.date-card:focus-visible .dc-marq{
-    display:inline-flex;
-    animation:dc-marq max(5s,calc(var(--len,12)*.42s)) steps(32) infinite;
-  }
+  .date-card:hover .dc-marq,.date-card:focus-visible .dc-marq{display:inline-flex;animation:dc-marq max(5s,calc(var(--len,12)*.42s)) steps(32) infinite}
   .date-card:hover .dc-marq>span,.date-card:focus-visible .dc-marq>span{flex:none;display:block}
-  .date-card:hover .dc-marq>span::after,.date-card:focus-visible .dc-marq>span::after{
-    content:"///";margin:0 .5em;color:var(--dim);
-  }
+  .date-card:hover .dc-marq>span::after,.date-card:focus-visible .dc-marq>span::after{content:"///";margin:0 .5em;color:var(--dim)}
 }
 
 /* ---------- Ligne d'état sous la liste (style terminal) ---------- */
 #dates .agenda-note{
   width:100%;max-width:none;padding:18px 22px;border:1px dashed var(--d-silver);
-  font:700 .9rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--d-silver);
+  font:700 .9rem/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--d-silver);
 }
 #dates .agenda-note::before{content:"> "}
-#dates .agenda-note::after{content:"_";animation:dc-blink 1s steps(1) infinite}
+#dates .agenda-note:not(.is-open)::after{content:"_";animation:dc-blink 1s steps(1) infinite}
 @keyframes dc-blink{50%{opacity:0}}
-
-/* ---------- HISTORIQUE : dalle blanche pleine largeur, puis bande en défilement continu ---------- */
-.archive{display:flex;flex-direction:column;gap:26px;width:100%;margin-top:clamp(36px,6vw,72px)}
-.archive[hidden]{display:none}
-.archive-title{
-  padding:12px clamp(14px,3vw,28px);background:#fff;color:#000;
-  font:900 clamp(1.6rem,7.6vw,5.2rem)/.95 var(--display);letter-spacing:-.01em;text-transform:uppercase;
+/* Aucune date à venir : le message devient une invitation */
+#dates .agenda-note.is-open{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 24px;color:#fff}
+#dates .agenda-note.is-open::before{display:none}
+.agenda-note span{max-width:46ch}
+/* Bouton : plaque de métal brossé, texte noir */
+.agenda-cta{
+  flex:none;padding:13px 20px;border:1px solid #fff;background:var(--metal-h);color:#000;
+  font:700 .85rem var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  box-shadow:0 6px 14px -8px rgba(0,0,0,.9);
 }
-/* Coupe franche (pas de fondu) ; le padding évite de rogner bordure, ombre et anneau de focus */
-.archive-marquee{width:100%;overflow:hidden;padding:10px 10px 14px}
-.archive-track{display:flex;width:max-content;animation:archive-scroll var(--dur,36s) linear infinite}
-.archive-marquee:hover .archive-track,.archive-marquee:focus-within .archive-track{animation-play-state:paused}
-.archive-group{display:flex;gap:18px;padding-right:18px;list-style:none}
-@keyframes archive-scroll{to{transform:translateX(-50%)}}
+.agenda-cta:hover{background:#000;color:#fff}
+.agenda-cta:active{transform:translateY(1px)}
 
-/* ---------- Mobile / tablette : les dates s'empilent verticalement ---------- */
+/* =========================================================
+   2. HISTORIQUE : frise verticale, les lieux se chromant au scroll
+   ========================================================= */
+.archive{display:flex;flex-direction:column;gap:clamp(20px,4vw,40px);width:100%;margin-top:clamp(48px,8vw,96px)}
+.archive[hidden]{display:none}
+
+/* Titre : ruban de papier blanc déchiré */
+.archive-title{
+  align-self:flex-start;padding:.32em .9em .26em;background:#fff;color:#000;
+  font:900 clamp(1.5rem,5.4vw,3.2rem)/1 var(--display);letter-spacing:-.01em;text-transform:uppercase;
+  transform:rotate(-1.2deg);
+  clip-path:polygon(0 6%,3% 0,40% 4%,70% 0,100% 5%,98% 30%,100% 55%,97% 80%,100% 100%,62% 95%,30% 100%,2% 96%,0 70%,2% 40%);
+}
+
+.trail{
+  --dc:190px;                  /* colonne des dates (desktop) */
+  --rx:calc(var(--dc) + 22px); /* axe du fil */
+  --p:0;--h:0;
+  position:relative;width:100%;
+}
+/* Fil éteint : pointillés gris ; fil parcouru : barre de métal brossé qui descend avec le scroll */
+.trail-wire{position:absolute;top:0;bottom:0;left:calc(var(--rx) - 3px);width:6px;background:repeating-linear-gradient(to bottom,var(--d-wire) 0 2px,transparent 2px 8px) center/2px 100% no-repeat}
+.trail-fill{position:absolute;inset:0;background:var(--metal-v);border:1px solid #000;transform-origin:top;transform:scaleY(var(--p))}
+/* Tête du fil : rivet chrome */
+.trail-head{
+  position:absolute;left:50%;top:0;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;
+  background:radial-gradient(circle at 36% 32%,#fff 0 18%,#d2d2d9 18% 46%,#85858c 46% 74%,#3d3d44 74% 100%);
+  border:1px solid #000;box-shadow:0 3px 6px rgba(0,0,0,.8);
+  transform:translateY(calc(var(--p) * var(--h) * 1px));
+  opacity:0;transition:opacity .3s;
+}
+.trail.is-ready:not(.is-static) .trail-head{opacity:1}
+.trail-list{list-style:none;position:relative}
+
+/* Une étape = un seul lien de bout en bout */
+.stop-link{
+  position:relative;display:grid;isolation:isolate;
+  grid-template-columns:var(--dc) 44px minmax(0,1fr);
+  grid-template-areas:"date node venue" ". . meta";
+  align-items:center;row-gap:8px;
+  padding-block:clamp(22px,4vw,40px);
+  color:#fff;
+}
+/* Trame de points photocopiée derrière le lieu allumé */
+.stop-link::before{
+  content:"";position:absolute;z-index:-1;top:10%;bottom:10%;left:calc(var(--rx) + 30px);right:6%;
+  background:var(--halftone);opacity:0;
+  -webkit-mask-image:linear-gradient(90deg,#000,transparent 75%);mask-image:linear-gradient(90deg,#000,transparent 75%);
+  transition:opacity .5s;
+}
+
+.stop-date{
+  grid-area:date;justify-self:end;padding-right:18px;text-align:right;
+  font:700 .8rem/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--d-dim);
+  transition:color .3s;
+}
+/* Pastille : rivet éteint (anneau gris) -> rivet chrome */
+.stop-node{
+  grid-area:node;justify-self:center;width:16px;height:16px;border-radius:50%;
+  border:1px solid var(--d-wire);background:#000;
+  transition:background .25s,border-color .25s;
+}
+
+/* Le lieu : contour argent (éteint) -> lettres chromées + grain d'encre (allumé) */
+.stop-venue{
+  grid-area:venue;position:relative;justify-self:start;max-width:100%;
+  padding:.06em .12em 0 20px;
+  font:400 clamp(2.7rem,9vw,6rem)/.9 var(--cond);text-transform:uppercase;overflow-wrap:anywhere;
+  /* 2 couches découpées dans les lettres : grain d'encre par-dessus le chrome */
+  background:var(--grit),var(--chrome-type);background-size:180px 180px,260% 100%;background-position:0 0,100% 0;
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-stroke:1px #6f6f78;
+  transition:-webkit-text-stroke-color .3s,transform .35s cubic-bezier(.16,1,.3,1);
+}
+#dates .stop-venue{color:transparent} /* bat « .stub strong » de style.css */
+
+.stop-meta{
+  grid-area:meta;display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;padding-left:22px;
+  font:700 .8rem var(--mono);letter-spacing:.1em;text-transform:uppercase;
+}
+.stop-city{color:var(--d-silver)}
+.stop-go{color:var(--d-dim);transition:color .2s}
+.stop-go i{display:inline-block;font-style:normal;transition:transform .2s cubic-bezier(.16,1,.3,1)}
+/* « Re-booké » : petit sticker blanc, la seule touche de couleur de la frise */
+.stop-badge{
+  padding:4px 9px 3px;background:#fff;color:#000;
+  font:400 1.15rem/1 var(--tag);letter-spacing:.02em;text-transform:none;
+  transform:rotate(-4deg);box-shadow:2px 3px 0 var(--vivid);
+}
+
+/* ---- Éteint : lettres en contour uniquement ---- */
+.trail.is-ready .stop:not(.is-lit) .stop-venue{background:none}
+
+/* ---- Allumé : le chrome se pose et un reflet balaie les lettres ---- */
+.stop.is-lit .stop-node{
+  border-color:#000;
+  background:radial-gradient(circle at 36% 32%,#fff 0 18%,#d2d2d9 18% 46%,#85858c 46% 74%,#3d3d44 74% 100%);
+}
+.stop.is-lit .stop-date{color:#fff}
+#dates .stop.is-lit .stop-venue{-webkit-text-stroke-color:transparent;background-position:0 0,0 0}
+.stop.is-lit .stop-link::before{opacity:.16}
+/* Dernier lieu atteint : sa date passe en vert (repère discret de lecture) */
+.stop.is-current .stop-date{color:var(--green)}
+
+@media (prefers-reduced-motion:no-preference){
+  .trail:not(.is-static) .stop.is-lit .stop-venue{animation:chrome-sweep .9s cubic-bezier(.16,1,.3,1) both}
+}
+@keyframes chrome-sweep{from{background-position:0 0,100% 0}to{background-position:0 0,0 0}}
+
+/* ---- Dernière étape : la date du visiteur, en pointillés tant qu'elle n'est pas atteinte ---- */
+.stop-end .stop-node{border-style:dashed;border-color:#fff}
+.stop-end .stop-go{color:#fff;border-bottom:1px solid #fff;padding-bottom:2px}
+
+/* ---- Survol, appui, clavier : le lieu glisse et se chrome quoi qu'il arrive ---- */
+.stop-link:focus-visible{outline:3px solid #fff;outline-offset:4px}
+#dates .stop-link:focus-visible .stop-venue,#dates .stop-link:active .stop-venue{background:var(--grit),var(--chrome-type);background-size:180px 180px,260% 100%;background-position:0 0,0 0;-webkit-background-clip:text;background-clip:text;-webkit-text-stroke-color:transparent}
+.stop-link:focus-visible .stop-go,.stop-link:active .stop-go{color:#fff}
+.stop-link:focus-visible .stop-go i{transform:translate(3px,-3px)}
+@media (hover:hover){
+  #dates .stop-link:hover .stop-venue{background:var(--grit),var(--chrome-type);background-size:180px 180px,260% 100%;background-position:0 0,0 0;-webkit-background-clip:text;background-clip:text;-webkit-text-stroke-color:transparent;transform:translateX(8px)}
+  .stop-link:hover .stop-go{color:#fff}
+  .stop-link:hover .stop-go i{transform:translate(3px,-3px)}
+}
+
+/* =========================================================
+   3. MOBILE / TABLETTE
+   ========================================================= */
 @media (max-width:860px){
   .agenda-head{display:none}
   .date-card{
     grid-template-columns:120px minmax(0,1fr);
-    grid-template-areas:"rail rail" "date venue" "hours hours" "go go";
+    grid-template-areas:"rail rail" "venue venue" "date hours" "go go";
     min-height:0;
   }
   .dc-rail{min-height:14px}
-  .dc-flag{--dir:180deg;writing-mode:horizontal-tb;transform:none;padding:8px 14px;place-items:center start}
+  .dc-flag{background:var(--metal-h);writing-mode:horizontal-tb;transform:none;padding:8px 14px;place-self:stretch;text-align:left}
   .dc-date,.dc-venue,.dc-hours,.dc-go{border-left:0;border-top:1px solid var(--ln);padding:14px 16px}
-  .dc-venue{border-left:1px solid var(--ln)}
-  .dc-date b{font-size:2.3rem}
-  .dc-name{white-space:normal;text-overflow:clip;overflow-wrap:anywhere;font-size:clamp(1.9rem,8vw,2.4rem)}
-  .dc-hours{flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 16px}
+  .dc-hours{border-left:1px solid var(--ln)}
+  .dc-name{white-space:normal;text-overflow:clip;overflow-wrap:anywhere;font-size:clamp(2.4rem,10vw,3.2rem)}
   .dc-go{flex-direction:row;justify-content:space-between;align-items:center;min-height:52px}
-  .date-card.is-past{width:220px}
-  .date-card.is-past .dc-go{justify-content:flex-start}
-  .date-card.is-past .dc-name{font-size:1.7rem;white-space:nowrap;text-overflow:ellipsis}
+}
+@media (max-width:720px){
+  /* Frise : le fil passe à gauche, la date au-dessus du lieu */
+  .trail{--dc:0px;--rx:15px}
+  .stop-link{
+    grid-template-columns:30px minmax(0,1fr);
+    grid-template-areas:". date" "node venue" ". meta";
+    row-gap:6px;padding-block:22px;
+  }
+  .stop-date{justify-self:start;text-align:left;padding:0 0 0 14px}
+  .stop-venue{padding-left:12px;font-size:clamp(2.5rem,12.5vw,3.6rem)}
+  .stop-meta{padding-left:14px;gap:6px 14px}
+  .stop-link::before{left:40px;right:0}
 }
 
-/* Mouvement réduit : plus de défilement, l'historique se range en grille statique */
+/* =========================================================
+   4. MOUVEMENT RÉDUIT : fil plein, tout est chromé, aucun balayage
+   ========================================================= */
 @media (prefers-reduced-motion:reduce){
   #dates .agenda-note::after{animation:none}
-  .archive-track{animation:none;width:auto}
-  .archive-group{flex-wrap:wrap;padding-right:0}
-  .archive-group[aria-hidden="true"],.h-dup{display:none}
+  .trail-fill{transform:none}
+  .stop-venue,.stop-date,.stop-node{transition:none}
+  #dates .stop-link:hover .stop-venue{transform:none}
 }

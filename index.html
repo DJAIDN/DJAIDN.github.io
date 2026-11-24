@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AIDN | DJ à Nantes &amp; en Vendée · DJ et producteur</title>
-<meta name="description" content="DJ à Nantes, en Vendée et dans l’Ouest : AIDN anime vos soirées et événements (rap, afro, amapiano, hard techno, open format). Devis rapide, contact 7j/7.">
+<meta name="description" content="AIDN, DJ et producteur à Nantes et en Vendée : rap, afro, amapiano, hard techno, open format. Dates, historique, rider et booking. Devis rapide, contact 7j/7.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#070708">
 <link rel="canonical" href="https://djaidn.fr/">
@@ -247,10 +247,14 @@
     <ul class="agenda" id="dates-list"></ul>
     <p class="agenda-note" id="dates-note" role="status">Chargement des dates…</p>
 
-    <!-- Historique : titre seul, puis bande de cartes cliquables en défilement continu -->
+    <!-- Historique : frise verticale, de la 1re date à la plus récente.
+         Un fil néon se trace au scroll et allume chaque lieu (voir initTrail dans script.js). -->
     <div class="archive" id="dates-history" hidden>
-      <h3 class="archive-title">Historique</h3>
-      <div class="archive-marquee" id="history-marquee"></div>
+      <h3 class="archive-title">Déjà joué ici</h3>
+      <div class="trail" id="history-trail">
+        <span class="trail-wire" aria-hidden="true"><i class="trail-fill"></i><i class="trail-head"></i></span>
+        <ol class="trail-list" id="history-list"></ol>
+      </div>
     </div>
   </section>
 
@@ -308,6 +312,5 @@
 
 <script src="script.js" defer></script>
 <script src="gallery.js" defer></script>
-<script src="fx.js" defer></script>
 </body>
 </html>

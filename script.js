@@ -328,7 +328,7 @@ async function initDates() {
   const head = document.getElementById('dates-head');
   const note = document.getElementById('dates-note');
   const historyWrap = document.getElementById('dates-history');
-  const historyBox = document.getElementById('history-marquee');
+  const historyList = document.getElementById('history-list');
   if (!list) return;
   const el = (tag, text, cls) => {
     const n = document.createElement(tag);
@@ -401,6 +401,43 @@ async function initDates() {
     return li;
   };
 
+  /* Une étape de la frise : le lieu en très gros, la date en petit.
+     pass : n-ième passage dans ce lieu (à partir de 2, une pastille « Re-booké »). */
+  const buildStop = (x, pass) => {
+    const d = new Date(x.date + 'T12:00');
+    const venueName = String(x.venue || '');
+    const link = venueLink(x);
+    const city = CITY_NAMES[x.city] || x.city || '';
+
+    const li = el('li', '', 'stop');
+    const a = el('a', '', 'stop-link');
+    a.href = link.url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+
+    const node = el('span', '', 'stop-node');
+    node.setAttribute('aria-hidden', 'true');
+
+    const time = el('time', d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }), 'stop-date');
+    time.dateTime = x.date;
+
+    const name = el('strong', venueName, 'stop-venue');
+
+    const arrow = el('i', '↗');
+    arrow.setAttribute('aria-hidden', 'true');
+    const go = el('span', link.label + ' ', 'stop-go');
+    go.append(arrow);
+    const meta = el('span', '', 'stop-meta');
+    if (city) meta.append(el('span', city, 'stop-city'));
+    meta.append(go);
+    if (pass > 1) meta.append(el('span', pass === 2 ? 'Re-booké' : `${pass}e passage`, 'stop-badge'));
+
+    a.append(node, time, name, meta);
+    a.append(el('span', ` : ouvrir ${link.label === 'Carte' ? 'la carte' : 'la page'} du lieu (nouvel onglet)`, 'sr'));
+    li.append(a);
+    return li;
+  };
+
   try {
     const res = await fetch('dates.json', { cache: 'no-cache' });
     if (!res.ok) throw new Error(res.status);
@@ -423,37 +460,105 @@ async function initDates() {
       .sort((a, b) => a.date.localeCompare(b.date) || String(a.time || '').localeCompare(String(b.time || '')));
 
     const upcoming = allDates.filter(x => x.date >= today);
-    const historical = allDates.filter(x => x.date < today).reverse(); // la plus récente d'abord
+    const historical = allDates.filter(x => x.date < today); // ordre chronologique : on lit la montée
 
     upcoming.forEach((x, i) => list.append(buildCard(x, { next: i === 0 })));
     if (head) head.hidden = !upcoming.length;
 
     injectEventSchema(upcoming);
-    note.textContent = upcoming.length ? "D'autres dates sont à venir" : 'Aucune date annoncée pour le moment.';
+    if (upcoming.length) {
+      note.textContent = "D'autres dates arrivent";
+    } else {
+      // Aucune date à venir : on transforme le vide en invitation à booker
+      note.textContent = '';
+      note.classList.add('is-open');
+      const cta = el('a', 'Réserver une date ↗', 'agenda-cta');
+      cta.href = 'mailto:contact@djaidn.fr?subject=Demande%20de%20booking%20DJ%20AIDN';
+      note.append(el('span', 'Prochaines dates en préparation. La suivante peut être la tienne.'), cta);
+    }
 
-    // Historique : bande en défilement continu, aucune donnée chiffrée affichée
-    if (historical.length) {
-      // Peu de dates : on répète la série pour que la bande remplisse toute la largeur
-      const CARD = 280; // largeur carte + gap (px), à garder aligné sur dates.css
-      const reps = Math.max(1, Math.ceil(2400 / (historical.length * CARD)));
-      const makeGroup = (isCopy) => {
-        const ul = el('ul', '', 'archive-group');
-        if (isCopy) ul.setAttribute('aria-hidden', 'true');
-        for (let r = 0; r < reps; r++) {
-          historical.forEach(x => ul.append(buildCard(x, { past: true, dup: isCopy || r > 0 })));
-        }
-        return ul;
-      };
-
-      const track = el('div', '', 'archive-track');
-      track.style.setProperty('--dur', Math.max(24, Math.round(historical.length * reps * CARD / 45)) + 's'); // ~45 px/s
-      track.append(makeGroup(false), makeGroup(true));
-      historyBox.append(track);
+    // Historique : frise verticale, la 1re date en haut, la plus récente en bas
+    if (historical.length && historyList) {
+      const seen = {};
+      historical.forEach(x => {
+        const key = slugKey(x.venue);
+        seen[key] = (seen[key] || 0) + 1;
+        historyList.append(buildStop(x, seen[key]));
+      });
+      // Dernière étape : le fil mène à la prochaine date, celle du visiteur
+      const end = el('li', '', 'stop stop-end');
+      const endLink = el('a', '', 'stop-link');
+      endLink.href = 'mailto:contact@djaidn.fr?subject=Demande%20de%20booking%20DJ%20AIDN';
+      const endNode = el('span', '', 'stop-node');
+      endNode.setAttribute('aria-hidden', 'true');
+      const endMeta = el('span', '', 'stop-meta');
+      endMeta.append(el('span', 'Demander un devis ↗', 'stop-go'));
+      endLink.append(endNode, el('span', 'Prochaine étape', 'stop-date'), el('strong', 'Ton événement', 'stop-venue'), endMeta);
+      end.append(endLink);
+      historyList.append(end);
       historyWrap.hidden = false;
+      initTrail(document.getElementById('history-trail'));
     }
   } catch (err) {
     note.textContent = 'Dates momentanément indisponibles. Contacte-moi pour connaître mes disponibilités.';
   }
+}
+
+/* Frise de l'historique : le fil néon suit le scroll (doigt ou molette) et allume
+   chaque lieu quand sa pastille passe la ligne de lecture, placée à 62 % de l'écran.
+   Réversible : en remontant, les lieux se rééteignent. Calcul limité à 1 fois par image,
+   et uniquement quand la frise est à l'écran. Mouvement réduit : tout est allumé d'emblée. */
+function initTrail(trail) {
+  if (!trail) return;
+  const stops = [...trail.querySelectorAll('.stop')];
+  if (!stops.length) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let nodeY = [], height = 0, ticking = false, active = false;
+
+  const measure = () => {
+    const box = trail.getBoundingClientRect();
+    height = box.height;
+    nodeY = stops.map(s => {
+      const n = s.querySelector('.stop-node').getBoundingClientRect();
+      return n.top + n.height / 2 - box.top;
+    });
+    trail.style.setProperty('--h', height.toFixed(1));
+  };
+
+  const update = () => {
+    ticking = false;
+    if (reduce.matches) {
+      trail.classList.add('is-static');
+      trail.style.setProperty('--p', 1);
+      stops.forEach(s => s.classList.add('is-lit'));
+      return;
+    }
+    trail.classList.remove('is-static');
+    const top = trail.getBoundingClientRect().top;
+    const reach = Math.min(Math.max(window.innerHeight * 0.62 - top, 0), height);
+    trail.style.setProperty('--p', height ? (reach / height).toFixed(4) : 0);
+    let current = -1;
+    stops.forEach((s, i) => {
+      const lit = reach >= nodeY[i];
+      s.classList.toggle('is-lit', lit);
+      if (lit) current = i;
+    });
+    stops.forEach((s, i) => s.classList.toggle('is-current', i === current));
+  };
+
+  const schedule = () => {
+    if (active && !ticking) { ticking = true; requestAnimationFrame(update); }
+  };
+
+  measure();
+  update();
+  trail.classList.add('is-ready');
+  new IntersectionObserver(([e]) => { active = e.isIntersecting; if (active) schedule(); },
+    { rootMargin: '20% 0px' }).observe(trail);
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', () => { measure(); schedule(); });
+  if (document.fonts) document.fonts.ready.then(() => { measure(); schedule(); });
+  reduce.addEventListener && reduce.addEventListener('change', () => { measure(); update(); });
 }
 
 /* SEO : les prochaines dates sont aussi publiées en données structurées (schema.org/MusicEvent),
