@@ -477,8 +477,9 @@ async function initDates() {
       note.append(el('span', 'Prochaines dates en préparation. La suivante peut être la tienne.'), cta);
     }
 
-    // Historique : frise verticale, la 1re date en haut, la plus récente en bas
-    if (historical.length && historyList) {
+    // Historique : frise verticale, la 1re date en haut, la plus récente en bas.
+    // Bloc isolé : un souci d'affichage de l'historique ne masque jamais les dates à venir.
+    if (historical.length && historyList && historyWrap) try {
       const seen = {};
       historical.forEach(x => {
         const key = slugKey(x.venue);
@@ -498,8 +499,14 @@ async function initDates() {
       historyList.append(end);
       historyWrap.hidden = false;
       initTrail(document.getElementById('history-trail'));
+    } catch (e) {
+      console.error('Historique des dates : affichage impossible', e);
+      historyWrap.hidden = false;
+      document.getElementById('history-trail')?.classList.add('is-static');
+      historyList.querySelectorAll('.stop').forEach(li => li.classList.add('is-lit'));
     }
   } catch (err) {
+    console.error('Dates : chargement impossible', err);
     note.textContent = 'Dates momentanément indisponibles. Contacte-moi pour connaître mes disponibilités.';
   }
 }
